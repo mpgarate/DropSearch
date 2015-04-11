@@ -1,1 +1,1 @@
-resque work -r crawl_job.rb
+resque work -q crawl -r jobs.rb
