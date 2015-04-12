@@ -1,4 +1,4 @@
-require './templeton.rb'
+require './app.rb'
 
 run Rack::URLMap.new \
   "/"       => Sinatra::Application
