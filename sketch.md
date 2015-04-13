@@ -20,3 +20,5 @@ index
 
 
  http://www.skorks.com/2009/07/how-to-write-a-web-crawler-in-ruby/
+ http://hmarr.com/2010/mar/18/full-text-search-with-mongodb/
+ http://www.elastic.co/guide/en/elasticsearch/client/ruby-api/current/_the_ruby_client.html

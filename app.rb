@@ -8,7 +8,7 @@ get '/' do
   "status: ok"
 end
 
-get '/start_crawl' do
+get '/crawl/new' do
   url = params['url']
 
   return "FAILURE" if url == nil

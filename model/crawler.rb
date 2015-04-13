@@ -1,18 +1,31 @@
+require 'open-uri'
+require 'time'
+require './model/page'
+
 class Crawler
   include Mongoid::Document
 
   field :start_url, type: String
   field :started, type: Boolean, default: false
+  field :start_time, type: Time, default: nil
+
+  attr_reader :pages_visited
+
+
+  def initialize(attrs = nil, options = nil)
+    super
+    @pages_visited = []
+  end
 
   # has_many :pages
   # has_and_belongs_to_many :keywords
 
   def crawl!
-    @start_time = Time.now
-    @started = true
+    self.start_time = Time.now
+    self.started = true
     save!
 
-    urls = [@start_url]
+    urls = [self.start_url]
 
     while not urls.empty? do
       url = urls.shift      
@@ -28,5 +41,7 @@ class Crawler
 
       # urls.concat page.next_urls
     end 
+
+    @pages_visited << page
   end
 end
