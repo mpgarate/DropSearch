@@ -2,16 +2,17 @@ class Crawler
   include Mongoid::Document
 
   field :start_url, type: String
+  field :started, type: Boolean, default: false
 
-  def initialize(start_url)
-    @start_url = start_url
-    @started = false
-  end
+  # has_many :pages
+  # has_and_belongs_to_many :keywords
 
   def crawl!
     @start_time = Time.now
+    @started = true
+    save!
 
-   urls = [start_url]
+    urls = [@start_url]
 
     while not urls.empty? do
       url = urls.shift      

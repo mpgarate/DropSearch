@@ -1,13 +1,11 @@
-require 'securerandom'
-require 'resque'
-require 'open-uri'
+require './inc/initialize'
 require './model/crawler'
-require './model/page'
 
 module CrawlJob
   @queue = :crawl
 
   def self.perform(crawler_id)
+    puts "crawler_id: #{crawler_id}"
     crawler = Crawler.find(crawler_id)
     crawler.crawl!
   end

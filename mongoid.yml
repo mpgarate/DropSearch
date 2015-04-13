@@ -1,0 +1,6 @@
+development:
+  sessions:
+    default:
+      database: drop_search
+      hosts:
+        - localhost:27017
