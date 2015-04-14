@@ -36,7 +36,12 @@ class Crawler
         page = Page.find_by(url: url)
 
         if page.nil?
+          puts url
+          puts "url not in database. Retrieving from the web..."
           file = open(url)
+
+          next if file.content_type != "text/html"
+
           body = file.read.force_encoding('UTF-8')
           page = self.pages.new(url: url, body: body)
           page.process_words!

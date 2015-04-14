@@ -11,6 +11,7 @@ describe Page, "" do
       <a href="http://www.questia.com/PM.qst?a=o&d=91316346">
       <a href="http://en.wikipedia.org/wiki/Albert_Gallatin#mw-head">
       <a href="http://en.wikipedia.org/wiki/File:AlbertGallatin.jpeg">
+      <a href="mailto:foo@example.com">
     }
     page = Page.new(url: url, body: body)
 
@@ -26,6 +27,8 @@ describe Page, "" do
     # omits urls to jpeg extension
     expect(page.next_urls).not_to include("http://en.wikipedia.org/wiki/File:AlbertGallatin.jpeg")
 
+    # omits mailto links
+    expect(page.next_urls).not_to include("mailto:foo@example.com")
 
   end
 end

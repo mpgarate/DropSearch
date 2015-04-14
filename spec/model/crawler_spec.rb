@@ -24,7 +24,8 @@ describe Crawler, "started" do
 
   it "crawls many pages" do
     crawler = Crawler.find_or_create_by(
-      start_url: "http://en.wikipedia.org/wiki/Albert_Gallatin",
+      #start_url: "http://en.wikipedia.org/wiki/Albert_Gallatin",
+      start_url: "http://kenrockwell.com/nikon/d7200.htm",
       max_crawl_pages: 15
       )
 

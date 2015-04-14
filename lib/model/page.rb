@@ -14,6 +14,7 @@ class Page
   def process_words!
     html = Nokogiri::HTML(self.body)
     text = html.at('body').inner_text
+    text = text.encode!('UTF-8', 'UTF-8', :invalid => :replace)
     keywords = text.scan(/[a-z]+/i)
     # TODO: stemming words
   end
@@ -35,6 +36,12 @@ class Page
 
     # ignore empty hrefs
     next_urls = next_urls.compact
+
+    # ignore mailto
+
+    next_urls.delete_if do |url|
+      url.to_s.starts_with? "mailto:"
+    end
 
     # next_urls.delete_if do |url|
     #   url.nil? or url.to_s.empty?
