@@ -9,6 +9,8 @@ class Page
   field :body, type: String
   field :time, type: Time
 
+  attr_reader :keywords
+
   has_and_belongs_to_many :crawlers
 
   def process_words!
@@ -16,7 +18,11 @@ class Page
     text = html.at('body').inner_text
     text = text.encode!('UTF-8', 'UTF-8', :invalid => :replace)
     keywords = text.scan(/[a-z]+/i)
-    # TODO: stemming words
+
+
+    keywords = keywords.map {|kw| Keyword.new(term: kw)}
+
+    @keywords = keywords
   end
 
   def next_urls

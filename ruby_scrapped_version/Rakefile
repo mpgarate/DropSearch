@@ -1,0 +1,1 @@
+load 'mongoid/tasks/database.rake'

@@ -20,8 +20,10 @@ class Crawler
     self.started = true
     self.save!
 
+    time1 = self.start_time
+    politeness_time = 0
+    
     urls = [self.start_url]
-
 
     next_urls = []
 
@@ -36,14 +38,26 @@ class Crawler
         page = Page.find_by(url: url)
 
         if page.nil?
+          elapsed_time = Time.now - time1
+          if elapsed_time < politeness_time
+            puts "sleeping for #{politeness_time}"
+            sleep (politeness_time) 
+          end
+
           puts url
           puts "url not in database. Retrieving from the web..."
+
+          time1 = Time.now
           file = open(url)
+          time2 = Time.now
+
+          politeness_time = (time2 - time1) * 10
 
           next if file.content_type != "text/html"
 
           body = file.read.force_encoding('UTF-8')
           page = self.pages.new(url: url, body: body)
+          puts "processing words..."
           page.process_words!
         else
           page.crawlers.push(self)
