@@ -12,3 +12,4 @@ gem "mongoid", "~> 3.1.6"
 gem "rspec"
 gem "guard"
 gem 'guard-rspec', require: false
+gem 'domainator'

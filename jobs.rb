@@ -1,5 +1,4 @@
 require './inc/initialize'
-require './model/crawler'
 
 module CrawlJob
   @queue = :crawl

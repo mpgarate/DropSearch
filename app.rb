@@ -2,8 +2,6 @@ require './inc/initialize'
 require 'sinatra'
 require './model/crawler'
 
-require_relative './jobs'
-
 get '/' do
   "status: ok"
 end
