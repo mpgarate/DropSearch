@@ -1,9 +1,9 @@
 package edu.nyu.mpgarate.dropsearch;
 
 import edu.nyu.mpgarate.DropSearch;
-import edu.nyu.mpgarate.dropsearch.listeners.DropSearchListener;
-import edu.nyu.mpgarate.dropsearch.model.WebPage;
-import edu.nyu.mpgarate.dropsearch.listeners.DropSearchLogger;
+import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import edu.nyu.mpgarate.dropsearch.listener.DropSearchLogger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class DropSearchTest {
 
         ds.addListener(logger);
 
-        ds.startCrawl();
+        ds.startSynchronousCrawl();
 
         List<WebPage> results = ds.search("university");
         assertEquals(albertGallatinURL, results.get(0).getUrl());

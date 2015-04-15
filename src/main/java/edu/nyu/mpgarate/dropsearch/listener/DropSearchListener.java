@@ -1,6 +1,4 @@
-package edu.nyu.mpgarate.dropsearch.listeners;
-
-import edu.nyu.mpgarate.dropsearch.service.Crawler;
+package edu.nyu.mpgarate.dropsearch.listener;
 
 /**
  * Created by mike on 4/14/15.

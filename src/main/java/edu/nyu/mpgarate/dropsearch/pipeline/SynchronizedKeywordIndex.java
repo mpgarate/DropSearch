@@ -1,4 +1,6 @@
-package edu.nyu.mpgarate.dropsearch.model;
+package edu.nyu.mpgarate.dropsearch.pipeline;
+
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
 
 import java.util.Collections;
 import java.util.LinkedList;

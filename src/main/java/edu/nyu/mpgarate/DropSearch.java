@@ -1,9 +1,12 @@
 package edu.nyu.mpgarate;
 
-import edu.nyu.mpgarate.dropsearch.listeners.DropSearchListener;
-import edu.nyu.mpgarate.dropsearch.model.SynchronizedKeywordIndex;
-import edu.nyu.mpgarate.dropsearch.model.WebPage;
-import edu.nyu.mpgarate.dropsearch.service.Crawler;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
+import edu.nyu.mpgarate.dropsearch.pipeline.RetrievalEngine;
+import edu.nyu.mpgarate.dropsearch.pipeline.SynchronizedKeywordIndex;
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import edu.nyu.mpgarate.dropsearch.pipeline.Crawler;
 
 import java.net.URL;
 import java.util.List;
@@ -11,24 +14,34 @@ import java.util.List;
 import static java.lang.Thread.sleep;
 
 public class DropSearch {
+    private URL startUrl;
     private Crawler crawler;
     private SynchronizedKeywordIndex index;
-
+    private RetrievalEngine retrievalEngine;
+    private MongoDatabase db;
 
     private DropSearch(URL startUrl){
+        this.startUrl = startUrl;
         this.index = new SynchronizedKeywordIndex();
-        this.crawler = new Crawler(startUrl, index);
+        MongoClient mongoClient = new MongoClient();
+
+        this.db = mongoClient.getDatabase("web_pages");
+
+        this.crawler = new Crawler(startUrl, index, db);
+        this.retrievalEngine = new RetrievalEngine(startUrl, index,
+                db);
+
     }
 
     public static DropSearch fromUrl(URL startUrl){
         return new DropSearch(startUrl);
     }
 
-    public void startCrawl(){
-        startCrawlThread();
+    public void startSynchronousCrawl(){
+        crawler.crawl();
     }
 
-    private void startCrawlThread(){
+    public void startAsynchronousCrawl(){
         Runnable runnable = new Runnable(){
             @Override
             public void run() {
@@ -40,7 +53,7 @@ public class DropSearch {
     }
 
     public List<WebPage> search(String term){
-        return index.getWebPages(term);
+        return retrievalEngine.getWebPages(term);
     }
 
     public void addListener(DropSearchListener listener) {

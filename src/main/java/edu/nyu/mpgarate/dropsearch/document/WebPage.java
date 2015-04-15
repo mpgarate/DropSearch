@@ -1,4 +1,4 @@
-package edu.nyu.mpgarate.dropsearch.model;
+package edu.nyu.mpgarate.dropsearch.document;
 
 import java.net.URL;
 

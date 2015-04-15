@@ -1,6 +1,6 @@
-package edu.nyu.mpgarate.dropsearch.listeners;
+package edu.nyu.mpgarate.dropsearch.listener;
 
-import edu.nyu.mpgarate.dropsearch.model.WebPage;
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
 
 /**
  * Created by mike on 4/14/15.
