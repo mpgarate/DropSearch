@@ -43,7 +43,8 @@ public class Crawler {
         WebPage wp = new WebPage(startUrl, body, new Date());
         Document doc = wp.getMongoDocument();
         pagesCollection.insertOne(doc);
-        index.add("university", doc.getObjectId("_id"));
+        index.addAll(KeywordExtractor.fromBody(body).extract(), doc.getObjectId
+                ("_id"));
         fireVisitedWebPageEvent(wp);
     }
 

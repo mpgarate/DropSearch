@@ -2,6 +2,7 @@ package edu.nyu.mpgarate.dropsearch.pipeline;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import edu.nyu.mpgarate.dropsearch.document.DeserializationException;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -33,7 +34,11 @@ public class RetrievalEngine {
 
         for (ObjectId id : objectIds){
             Document doc = pagesCollection.find(eq("_id", id)).first();
-            webPages.add(doc);
+            try {
+                WebPage page = WebPage.fromMongoDocument(doc);
+                webPages.add(page);
+            } catch (DeserializationException ignoredException) {
+            }
         }
 
         return webPages;

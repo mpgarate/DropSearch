@@ -18,13 +18,13 @@ public class SynchronizedKeywordIndex {
             ConcurrentHashMap<String,
             List<ObjectId>>();
 
-    public void add(String term, ObjectId webPage) {
+    public void add(String term, ObjectId pageId) {
         synchronized (lock) {
             List<ObjectId> pagesList = map.get(term);
 
             if (null == pagesList) {
                 pagesList = new LinkedList<ObjectId>();
-                pagesList.add(webPage);
+                pagesList.add(pageId);
                 map.put(term, pagesList);
             } else {
                 map.put(term, pagesList);
@@ -32,7 +32,19 @@ public class SynchronizedKeywordIndex {
         }
     }
 
+    public void addAll(List<String> terms, ObjectId pageId){
+        for(String term : terms){
+            add(term, pageId);
+        }
+    }
+
     public List<ObjectId> getObjectIds(String term){
-        return Collections.unmodifiableList(map.get(term));
+        List<ObjectId> objectIds = map.get(term);
+
+        if (null == objectIds){
+            return new LinkedList<ObjectId>();
+        }
+
+        return Collections.unmodifiableList(objectIds);
     }
 }

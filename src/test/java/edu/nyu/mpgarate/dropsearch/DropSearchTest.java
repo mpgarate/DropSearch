@@ -29,9 +29,6 @@ public class DropSearchTest {
     @Test
     public void dropSearchSimpleTest() throws MalformedURLException {
         DropSearch ds = DropSearch.fromUrl(albertGallatinURL);
-        DropSearchListener logger = new DropSearchLogger();
-
-        ds.addListener(logger);
 
         ds.startSynchronousCrawl();
 
