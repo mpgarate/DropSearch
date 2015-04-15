@@ -33,6 +33,14 @@ public class WebPage {
         return url;
     }
 
+    public String getBody(){
+        return body;
+    }
+
+    public ObjectId getObjectId(){
+        return mongoDocument.getObjectId("_id");
+    }
+
     public Document getMongoDocument(){
         return mongoDocument;
     }

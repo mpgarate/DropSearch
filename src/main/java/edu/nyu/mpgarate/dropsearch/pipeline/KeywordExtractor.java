@@ -31,8 +31,6 @@ public class KeywordExtractor {
 
         String bodyText = jsoupDoc.body().text();
 
-
-
         BreakIterator boundary = BreakIterator.getWordInstance();
         boundary.setText(bodyText);
 
