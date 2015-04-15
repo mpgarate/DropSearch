@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mike on 4/14/15.
@@ -25,7 +26,7 @@ public class DropSearchTest {
                 ".org/wiki/Albert_Gallatin");
     }
 
-    @Test()
+    @Test
     public void dropSearchSimpleTest() throws MalformedURLException {
         DropSearch ds = DropSearch.fromUrl(albertGallatinURL);
         DropSearchListener logger = new DropSearchLogger();
@@ -35,6 +36,11 @@ public class DropSearchTest {
         ds.startSynchronousCrawl();
 
         List<WebPage> results = ds.search("university");
-        assertEquals(albertGallatinURL, results.get(0).getUrl());
+
+        WebPage result = results.get(0);
+
+        System.out.println(result);
+
+        assertEquals(albertGallatinURL, result.getUrl());
     }
 }

@@ -1,6 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.pipeline;
 
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import org.bson.types.ObjectId;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -14,16 +14,16 @@ public class SynchronizedKeywordIndex {
 
     private Object lock = new Object();
 
-    private ConcurrentHashMap<String, List<WebPage>> map = new
+    private ConcurrentHashMap<String, List<ObjectId>> map = new
             ConcurrentHashMap<String,
-            List<WebPage>>();
+            List<ObjectId>>();
 
-    public void add(String term, WebPage webPage) {
+    public void add(String term, ObjectId webPage) {
         synchronized (lock) {
-            List<WebPage> pagesList = map.get(term);
+            List<ObjectId> pagesList = map.get(term);
 
             if (null == pagesList) {
-                pagesList = new LinkedList<WebPage>();
+                pagesList = new LinkedList<ObjectId>();
                 pagesList.add(webPage);
                 map.put(term, pagesList);
             } else {
@@ -32,7 +32,7 @@ public class SynchronizedKeywordIndex {
         }
     }
 
-    public List<WebPage> getWebPages(String term){
+    public List<ObjectId> getObjectIds(String term){
         return Collections.unmodifiableList(map.get(term));
     }
 }

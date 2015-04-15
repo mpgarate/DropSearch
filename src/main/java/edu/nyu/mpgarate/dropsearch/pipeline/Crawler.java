@@ -1,12 +1,16 @@
 package edu.nyu.mpgarate.dropsearch.pipeline;
 
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,28 +21,30 @@ public class Crawler {
     private URL startUrl;
     private SynchronizedKeywordIndex index;
     private List<CrawlerListener> listeners;
-    private MongoDatabase db;
+    private MongoCollection<Document> pagesCollection;
 
     public Crawler(URL startUrl, SynchronizedKeywordIndex index,
-                   MongoDatabase db){
+                   MongoCollection<Document> pagesCollection){
         this.startUrl = startUrl;
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.db = db;
+        this.pagesCollection = pagesCollection;
     }
 
     public void crawl() {
-        WebPage wp = new WebPage(startUrl);
-        index.add("university", wp);
-        fireVisitedWebPageEvent(wp);
-
-        String body = null;
+        String body;
         try {
             body = IOUtil.getURLAsString(startUrl);
         } catch (IOException e) {
-            e.printStackTrace();
+            return;
         }
-        System.out.println(body);
+
+        // TODO: index.addAll(List<String>, wp);
+        WebPage wp = new WebPage(startUrl, body, new Date());
+        Document doc = wp.getMongoDocument();
+        pagesCollection.insertOne(doc);
+        index.add("university", doc.getObjectId("_id"));
+        fireVisitedWebPageEvent(wp);
     }
 
     public void addListener(CrawlerListener listener){
