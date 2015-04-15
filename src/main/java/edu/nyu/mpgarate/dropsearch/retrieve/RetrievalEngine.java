@@ -1,7 +1,7 @@
-package edu.nyu.mpgarate.dropsearch.pipeline;
+package edu.nyu.mpgarate.dropsearch.retrieve;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import edu.nyu.mpgarate.dropsearch.crawl.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.document.DeserializationException;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.bson.Document;

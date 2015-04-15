@@ -1,4 +1,4 @@
-package edu.nyu.mpgarate.dropsearch.pipeline;
+package edu.nyu.mpgarate.dropsearch.crawl;
 
 import org.bson.types.ObjectId;
 

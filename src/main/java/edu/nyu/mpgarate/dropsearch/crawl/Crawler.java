@@ -1,19 +1,15 @@
-package edu.nyu.mpgarate.dropsearch.pipeline;
+package edu.nyu.mpgarate.dropsearch.crawl;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import edu.nyu.mpgarate.dropsearch.document.DeserializationException;
 import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -25,6 +21,7 @@ public class Crawler {
     private SynchronizedKeywordIndex index;
     private List<CrawlerListener> listeners;
     private MongoCollection<Document> pagesCollection;
+    private final Integer maxCrawlPages;
 
     public Crawler(URL startUrl, SynchronizedKeywordIndex index,
                    MongoCollection<Document> pagesCollection){
@@ -32,21 +29,38 @@ public class Crawler {
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
         this.pagesCollection = pagesCollection;
+        this.maxCrawlPages = 15;
     }
 
     public void crawl() {
+        List<WebPage> webPages = new ArrayList<WebPage>();
+        Queue<URL> urls = new LinkedList<URL>();
+        Queue<URL> nextUrls = new LinkedList<URL>();
 
+        urls.add(startUrl);
 
-        WebPage webPage = getOrFetchWebPage(startUrl);
+        while (!urls.isEmpty() && webPages.size() < maxCrawlPages){
+            URL url = urls.remove();
 
-        if (null == webPage){
-            // skip this iteration
+            System.out.println(url);
+
+            WebPage webPage = getOrFetchWebPage(startUrl);
+
+            if (null == webPage){
+                continue;
+            }
+
+            Extractor extractor = Extractor.fromBody(webPage.getBody(),
+                    startUrl);
+
+            index.addAll(extractor.keywords(), webPage.getObjectId());
+
+            urls.addAll(extractor.nextURLs());
+
+            fireVisitedWebPageEvent(webPage);
         }
 
-        index.addAll(KeywordExtractor.fromBody(webPage.getBody()).extract(),
-                webPage.getObjectId());
 
-        fireVisitedWebPageEvent(webPage);
     }
 
     /**

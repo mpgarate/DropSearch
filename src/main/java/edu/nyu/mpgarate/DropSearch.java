@@ -1,24 +1,18 @@
 package edu.nyu.mpgarate;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import edu.nyu.mpgarate.dropsearch.db.DB;
+import edu.nyu.mpgarate.dropsearch.util.DB;
 import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
-import edu.nyu.mpgarate.dropsearch.pipeline.RetrievalEngine;
-import edu.nyu.mpgarate.dropsearch.pipeline.SynchronizedKeywordIndex;
+import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
+import edu.nyu.mpgarate.dropsearch.crawl.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.pipeline.Crawler;
+import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static java.lang.Thread.sleep;
 
 public class DropSearch {
     private URL startUrl;

@@ -1,4 +1,4 @@
-package edu.nyu.mpgarate.dropsearch.db;
+package edu.nyu.mpgarate.dropsearch.util;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
