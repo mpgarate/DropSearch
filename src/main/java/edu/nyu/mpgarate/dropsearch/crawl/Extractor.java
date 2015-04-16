@@ -7,11 +7,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.BreakIterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by mike on 4/15/15.
@@ -70,6 +70,18 @@ public class Extractor {
         return !startUrl.toString().equals(trimmedUrl);
     }
 
+    private boolean urlIsNotForbiddenType(URL url){
+        Set<String> forbiddenTypes = new HashSet<String>();
+        forbiddenTypes.add("jpg");
+        forbiddenTypes.add("png");
+
+        String urlStr = url.toString();
+        String extension = urlStr.substring(urlStr.lastIndexOf('.'));
+        extension = extension.toLowerCase();
+
+        return forbiddenTypes.contains(extension);
+    }
+
     private URL getValidNextUrlOrNull(String urlStr){
         if (urlStr.trim().length() <= 4) {
             return null;
@@ -105,10 +117,9 @@ public class Extractor {
 
             if (null != url){
                 nextUrls.add(url);
-                System.out.println(url);
             }
         }
 
-        return new LinkedList<URL>();
+        return nextUrls;
     }
 }

@@ -33,7 +33,6 @@ public class ExtractorTest {
                 + "<a href='http://example.com/subdir'>foo</a>"
                 + "<a href='http://example.com/image.jpg'>foo</a>"
                 + "<a href='/relative/subdir'>foo</a>"
-                + "<a href='http://example.com/#samepageanchor'>foo</a>"
                 + "<a href='http://example.com#samepageanchor'>foo</a>"
                 + "<a href='http://example.com'>foo</a>"
                 + "<a href='http://google.com'>foo</a>"
@@ -44,19 +43,11 @@ public class ExtractorTest {
 
         List<URL> nextUrls = e.nextUrls();
 
-        System.out.println(nextUrls.size());
-        for (URL url : nextUrls){
-            System.out.println(url);
-            System.out.println("got here");
-            System.out.println(url.equals(new URL("http://example" +
-                    ".com/subdir")));
-        }
-
         assertTrue(nextUrls.contains(new URL("http://example.com/subdir")));
         assertTrue(nextUrls.contains(new URL("http://example.com/relative/subdir")));
         assertFalse(nextUrls.contains(new URL("http://example.com")));
-        assertFalse(nextUrls.contains(new URL("http://example.com/#samepageanchor")));
-        assertTrue(nextUrls.contains(new URL("http://google.com")));
+        assertFalse(nextUrls.contains(new URL("http://example.com#samepageanchor")));
+        assertFalse(nextUrls.contains(new URL("http://google.com")));
         assertTrue(nextUrls.contains(new URL("http://example.com/image.jpg")));
     }
 }
