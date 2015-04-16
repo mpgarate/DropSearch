@@ -48,6 +48,6 @@ public class ExtractorTest {
         assertFalse(nextUrls.contains(new URL("http://example.com")));
         assertFalse(nextUrls.contains(new URL("http://example.com#samepageanchor")));
         assertFalse(nextUrls.contains(new URL("http://google.com")));
-        assertTrue(nextUrls.contains(new URL("http://example.com/image.jpg")));
+        assertFalse(nextUrls.contains(new URL("http://example.com/image.jpg")));
     }
 }

@@ -1,41 +1,41 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.BreakIterator;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by mike on 4/15/15.
  */
 public class Extractor {
-    private String body;
     private Document jsoupDoc;
     private String bodyText;
     private URL startUrl;
     private URL startUrlBase;
 
-    private Extractor(String body, URL startUrl){
-        this.body = body;
+    private Extractor(String body, URL startUrl) {
         this.jsoupDoc = Jsoup.parse(body);
         this.bodyText = jsoupDoc.body().text();
         this.startUrl = startUrl;
         this.startUrlBase = getUrlBase(startUrl);
+
+        jsoupDoc.setBaseUri(startUrl.toString());
     }
 
-    public static Extractor fromBody(String body, URL startUrl){
+    public static Extractor fromBody(String body, URL startUrl) {
         return new Extractor(body, startUrl);
     }
 
-    public List<String> keywords(){
+    public List<String> keywords() {
         LinkedList<String> keyWords = new LinkedList<String>();
 
         BreakIterator boundary = BreakIterator.getWordInstance();
@@ -55,34 +55,24 @@ public class Extractor {
         return keyWords;
     }
 
-    private URL getUrlBase(URL url){
-        try {
-            return new URL(url.getProtocol() + "://" + url
-                    .getHost());
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Invalid URL" + url);
+    public List<URL> nextUrls() {
+        List<URL> nextUrls = new LinkedList<URL>();
+        Elements links = jsoupDoc.select("a[href]");
+
+        for (Element link : links) {
+            String urlStr = link.attr("abs:href");
+
+            URL url = getValidNextUrlOrNull(urlStr);
+
+            if (null != url) {
+                nextUrls.add(url);
+            }
         }
+
+        return nextUrls;
     }
 
-    private boolean urlIsNotSamePageAnchor(URL url){
-        String trimmedUrl = url.toString().split("#")[0];
-
-        return !startUrl.toString().equals(trimmedUrl);
-    }
-
-    private boolean urlIsNotForbiddenType(URL url){
-        Set<String> forbiddenTypes = new HashSet<String>();
-        forbiddenTypes.add("jpg");
-        forbiddenTypes.add("png");
-
-        String urlStr = url.toString();
-        String extension = urlStr.substring(urlStr.lastIndexOf('.'));
-        extension = extension.toLowerCase();
-
-        return forbiddenTypes.contains(extension);
-    }
-
-    private URL getValidNextUrlOrNull(String urlStr){
+    private URL getValidNextUrlOrNull(String urlStr) {
         if (urlStr.trim().length() <= 4) {
             return null;
         }
@@ -92,7 +82,8 @@ public class Extractor {
             URL urlBase = getUrlBase(url);
 
             if (startUrlBase.equals(urlBase) &&
-                    urlIsNotSamePageAnchor(url)){
+                    urlIsNotSamePageAnchor(url) &&
+                    urlIsNotForbiddenType(url)) {
 
                 return url;
             }
@@ -103,23 +94,30 @@ public class Extractor {
         return null;
     }
 
-    public List<URL> nextUrls(){
-        List<URL> nextUrls = new LinkedList<URL>();
-        Elements links = jsoupDoc.select("a[href]");
-
-
-        jsoupDoc.setBaseUri(startUrl.toString());
-
-        for (Element link : links){
-            String urlStr = link.attr("abs:href");
-
-            URL url = getValidNextUrlOrNull(urlStr);
-
-            if (null != url){
-                nextUrls.add(url);
-            }
+    private URL getUrlBase(URL url) {
+        try {
+            return new URL(url.getProtocol() + "://" + url.getHost());
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid URL" + url);
         }
-
-        return nextUrls;
     }
+
+    private boolean urlIsNotSamePageAnchor(URL url) {
+        String trimmedUrl = url.toString().split("#")[0];
+
+        return !startUrl.toString().equals(trimmedUrl);
+    }
+
+    private boolean urlIsNotForbiddenType(URL url) {
+        Set<String> forbiddenTypes = new HashSet<String>();
+        forbiddenTypes.add("jpg");
+        forbiddenTypes.add("png");
+
+        String urlStr = url.toString();
+        String extension = urlStr.substring(urlStr.lastIndexOf('.'));
+        extension = extension.toLowerCase().replace(".", "");
+
+        return !forbiddenTypes.contains(extension);
+    }
+
 }
