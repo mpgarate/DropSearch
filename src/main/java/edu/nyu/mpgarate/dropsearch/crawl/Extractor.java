@@ -21,12 +21,14 @@ public class Extractor {
     private Document jsoupDoc;
     private String bodyText;
     private URL startUrl;
+    private URL startUrlBase;
 
     private Extractor(String body, URL startUrl){
         this.body = body;
         this.jsoupDoc = Jsoup.parse(body);
         this.bodyText = jsoupDoc.body().text();
         this.startUrl = startUrl;
+        this.startUrlBase = getUrlBase(startUrl);
     }
 
     public static Extractor fromBody(String body, URL startUrl){
@@ -68,31 +70,42 @@ public class Extractor {
         return !startUrl.toString().equals(trimmedUrl);
     }
 
-    public List<URL> nextURLs(){
-        List<URL> nextURLs = new LinkedList<URL>();
+    private URL getValidNextUrlOrNull(String urlStr){
+        if (urlStr.trim().length() <= 4) {
+            return null;
+        }
+
+        try {
+            URL url = new URL(startUrlBase, urlStr);
+            URL urlBase = getUrlBase(url);
+
+            if (startUrlBase.equals(urlBase) &&
+                    urlIsNotSamePageAnchor(url)){
+
+                return url;
+            }
+
+        } catch (MalformedURLException ignoredException) {
+        }
+
+        return null;
+    }
+
+    public List<URL> nextUrls(){
+        List<URL> nextUrls = new LinkedList<URL>();
         Elements links = jsoupDoc.select("a[href]");
 
-        URL startUrlBase = getUrlBase(startUrl);
 
         jsoupDoc.setBaseUri(startUrl.toString());
 
         for (Element link : links){
             String urlStr = link.attr("abs:href");
 
-            if (urlStr.trim().length() > 4){
-                try {
-                    URL url = new URL(startUrlBase, urlStr);
-                    URL urlBase = getUrlBase(url);
+            URL url = getValidNextUrlOrNull(urlStr);
 
-                    if (startUrlBase.equals(urlBase) &&
-                            urlIsNotSamePageAnchor(url)){
-
-                        nextURLs.add(url);
-                        System.out.println(url);
-                    }
-
-                } catch (MalformedURLException ignoredException) {
-                }
+            if (null != url){
+                nextUrls.add(url);
+                System.out.println(url);
             }
         }
 

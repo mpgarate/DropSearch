@@ -55,7 +55,7 @@ public class Crawler {
 
             index.addAll(extractor.keywords(), webPage.getObjectId());
 
-            urls.addAll(extractor.nextURLs());
+            urls.addAll(extractor.nextUrls());
 
             fireVisitedWebPageEvent(webPage);
         }

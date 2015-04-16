@@ -22,8 +22,9 @@ public class DropSearchTest {
 
     @BeforeClass
     public static void setUp() throws MalformedURLException {
-        albertGallatinURL = new URL("http://en.wikipedia" +
-                ".org/wiki/Albert_Gallatin");
+        //albertGallatinURL = new URL("http://en.wikipedia" +
+          //      ".org/wiki/Albert_Gallatin");
+        albertGallatinURL = new URL("http://kenrockwell.com/nikon/d7200.htm");
     }
 
     @Test
