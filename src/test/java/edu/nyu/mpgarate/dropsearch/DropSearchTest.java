@@ -19,16 +19,34 @@ import static org.junit.Assert.assertTrue;
  */
 public class DropSearchTest {
     private static URL albertGallatinURL;
+    private static URL kenRockwellUrl;
 
     @BeforeClass
     public static void setUp() throws MalformedURLException {
         //albertGallatinURL = new URL("http://en.wikipedia" +
           //      ".org/wiki/Albert_Gallatin");
-        albertGallatinURL = new URL("http://kenrockwell.com/nikon/d7200.htm");
+        kenRockwellUrl = new URL("http://kenrockwell.com/nikon/d7200.htm");
+        albertGallatinURL = new URL("http://en.wikipedia" +
+                ".org/wiki/Albert_Gallatin");
     }
 
     @Test
-    public void dropSearchSimpleTest() throws MalformedURLException {
+    public void kenRockwellTest() throws MalformedURLException {
+        DropSearch ds = DropSearch.fromUrl(kenRockwellUrl);
+
+        ds.startSynchronousCrawl();
+
+        List<WebPage> results = ds.search("nikon");
+
+        WebPage result = results.get(0);
+
+        System.out.println(result);
+
+        assertEquals(kenRockwellUrl, result.getUrl());
+    }
+
+    @Test
+    public void albertGallatinTest() throws MalformedURLException {
         DropSearch ds = DropSearch.fromUrl(albertGallatinURL);
 
         ds.startSynchronousCrawl();

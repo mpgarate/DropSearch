@@ -33,13 +33,13 @@ public class Crawler {
     }
 
     public void crawl() {
-        List<WebPage> webPages = new ArrayList<WebPage>();
         Queue<URL> urls = new LinkedList<URL>();
-        Queue<URL> nextUrls = new LinkedList<URL>();
+
+        int pagesVisited = 0;
 
         urls.add(startUrl);
 
-        while (!urls.isEmpty() && webPages.size() < maxCrawlPages){
+        while (!urls.isEmpty() && pagesVisited < maxCrawlPages){
             URL url = urls.remove();
 
             System.out.println(url);
@@ -49,6 +49,8 @@ public class Crawler {
             if (null == webPage){
                 continue;
             }
+
+            pagesVisited++;
 
             Extractor extractor = Extractor.fromBody(webPage.getBody(),
                     startUrl);
