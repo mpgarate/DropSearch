@@ -1,9 +1,6 @@
 package edu.nyu.mpgarate.dropsearch;
 
-import edu.nyu.mpgarate.DropSearch;
-import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.listener.DropSearchLogger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by mike on 4/14/15.
  */
-public class DropSearchTest {
+public class SearchEngineTest {
     private static URL albertGallatinURL;
     private static URL kenRockwellUrl;
 
@@ -32,7 +29,7 @@ public class DropSearchTest {
 
     @Test
     public void kenRockwellTest() throws MalformedURLException {
-        DropSearch ds = DropSearch.fromUrl(kenRockwellUrl);
+        SearchEngine ds = SearchEngine.fromUrl(kenRockwellUrl);
 
         ds.startSynchronousCrawl();
 
@@ -47,7 +44,7 @@ public class DropSearchTest {
 
     @Test
     public void albertGallatinTest() throws MalformedURLException {
-        DropSearch ds = DropSearch.fromUrl(albertGallatinURL);
+        SearchEngine ds = SearchEngine.fromUrl(albertGallatinURL);
 
         ds.startSynchronousCrawl();
 

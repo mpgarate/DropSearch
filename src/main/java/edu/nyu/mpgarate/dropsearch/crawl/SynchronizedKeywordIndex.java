@@ -11,6 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by mike on 4/14/15.
  */
 public class SynchronizedKeywordIndex {
+    private final static SynchronizedKeywordIndex instance = new
+    SynchronizedKeywordIndex();
+
+    public static SynchronizedKeywordIndex getInstance(){
+        return instance;
+    }
 
     private Object lock = new Object();
 

@@ -59,6 +59,9 @@ public class Crawler {
 
             urls.addAll(extractor.nextUrls());
 
+            System.out.println("Visited:");
+            System.out.println(url.toString());
+
             fireVisitedWebPageEvent(webPage);
         }
 
