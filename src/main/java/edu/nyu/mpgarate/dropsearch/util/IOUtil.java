@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mike on 4/14/15.
@@ -16,6 +18,11 @@ public class IOUtil {
      */
     public static String getURLAsString(URL url) throws IOException {
         URLConnection connection = url.openConnection();
+
+        Map<String, List<String>> header = connection.getHeaderFields();
+        if (!header.get("Content-Type").get(0).contains("text/html")){
+            return null;
+        }
 
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(connection.getInputStream())

@@ -85,6 +85,9 @@ public class Crawler {
         if (null == doc){
             try {
                 body = IOUtil.getURLAsString(url);
+                if (null == body){
+                    return null;
+                }
             } catch (IOException e) {
                 System.out.println("---- could not get page ----");
                 System.out.println(url.toString());
