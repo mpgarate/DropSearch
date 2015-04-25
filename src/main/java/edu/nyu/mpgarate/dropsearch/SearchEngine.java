@@ -16,26 +16,45 @@ public class SearchEngine {
     private Crawler crawler;
     private SynchronizedKeywordIndex index;
     private RetrievalEngine retrievalEngine;
+    private Boolean started;
+    private Object lock = new Object();
 
-    private SearchEngine(URL startUrl){
-        this.index = SynchronizedKeywordIndex.getInstance();
+    SearchEngine(URL startUrl){
+        this.index = new SynchronizedKeywordIndex();
 
         MongoCollection<Document> pagesCollection = DB.getPagesCollection();
 
         this.crawler = new Crawler(startUrl, index, pagesCollection);
         this.retrievalEngine = new RetrievalEngine(startUrl, index,
                 pagesCollection);
+
+        this.started = false;
     }
 
-    public static SearchEngine fromUrl(URL startUrl){
-        return new SearchEngine(startUrl);
+    public Boolean isStarted(){
+        return started;
     }
 
     public void startSynchronousCrawl(){
+        synchronized(lock) {
+            if (started) {
+                return;
+            }
+            started = true;
+        }
+
         crawler.crawl();
     }
 
     public void startAsynchronousCrawl(){
+        synchronized(lock) {
+            if (started) {
+                return;
+            }
+            started = true;
+        }
+
+        this.started = true;
         Runnable runnable = new Runnable(){
             @Override
             public void run() {

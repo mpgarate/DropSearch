@@ -11,18 +11,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by mike on 4/14/15.
  */
 public class SynchronizedKeywordIndex {
-    private final static SynchronizedKeywordIndex instance = new
-    SynchronizedKeywordIndex();
-
-    public static SynchronizedKeywordIndex getInstance(){
-        return instance;
-    }
-
     private Object lock = new Object();
 
     private ConcurrentHashMap<String, List<ObjectId>> map = new
             ConcurrentHashMap<String,
             List<ObjectId>>();
+
+    public SynchronizedKeywordIndex(){
+
+    }
 
     public void add(String term, ObjectId pageId) {
         synchronized (lock) {
@@ -39,6 +36,7 @@ public class SynchronizedKeywordIndex {
     }
 
     public void addAll(List<String> terms, ObjectId pageId){
+        // make sure pageId is unique, maybe use a set?
         for(String term : terms){
             add(term, pageId);
         }

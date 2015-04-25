@@ -21,7 +21,7 @@ public class SearchEngineFactory {
         synchronized (searchEngines){
             searchEngine = searchEngines.get(url);
             if (null == searchEngine){
-                searchEngine = SearchEngine.fromUrl(url);
+                searchEngine = new SearchEngine(url);
             }
             searchEngines.put(url, searchEngine);
         }

@@ -44,7 +44,7 @@ public class Crawler {
 
             System.out.println(url);
 
-            WebPage webPage = getOrFetchWebPage(startUrl);
+            WebPage webPage = getOrFetchWebPage(url);
 
             if (null == webPage){
                 continue;
@@ -53,14 +53,17 @@ public class Crawler {
             pagesVisited++;
 
             Extractor extractor = Extractor.fromBody(webPage.getBody(),
-                    startUrl);
+                    url);
 
             index.addAll(extractor.keywords(), webPage.getObjectId());
 
+            System.out.println("getting urls");
             urls.addAll(extractor.nextUrls());
+            System.out.println("done.");
 
             System.out.println("Visited:");
             System.out.println(url.toString());
+            System.out.println(extractor.keywords());
 
             fireVisitedWebPageEvent(webPage);
         }
@@ -83,10 +86,13 @@ public class Crawler {
             try {
                 body = IOUtil.getURLAsString(url);
             } catch (IOException e) {
+                System.out.println("---- could not get page ----");
+                System.out.println(url.toString());
                 return null;
             }
 
-            webPage = new WebPage(startUrl, body, new Date());
+            System.out.println("---- fetched doc from the web ----");
+            webPage = new WebPage(url, body, new Date());
             doc = webPage.getMongoDocument();
             pagesCollection.insertOne(doc);
         } else {

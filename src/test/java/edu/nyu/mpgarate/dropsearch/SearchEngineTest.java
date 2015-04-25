@@ -27,33 +27,33 @@ public class SearchEngineTest {
                 ".org/wiki/Albert_Gallatin");
     }
 
-    @Test
-    public void kenRockwellTest() throws MalformedURLException {
-        SearchEngine ds = SearchEngine.fromUrl(kenRockwellUrl);
-
-        ds.startSynchronousCrawl();
-
-        List<WebPage> results = ds.search("nikon");
-
-        WebPage result = results.get(0);
-
-        System.out.println(result);
-
-        assertEquals(kenRockwellUrl, result.getUrl());
-    }
-
-    @Test
-    public void albertGallatinTest() throws MalformedURLException {
-        SearchEngine ds = SearchEngine.fromUrl(albertGallatinURL);
-
-        ds.startSynchronousCrawl();
-
-        List<WebPage> results = ds.search("university");
-
-        WebPage result = results.get(0);
-
-        System.out.println(result);
-
-        assertEquals(albertGallatinURL, result.getUrl());
-    }
+//    @Test
+//    public void kenRockwellTest() throws MalformedURLException {
+//        SearchEngine ds = new SearchEngine(kenRockwellUrl);
+//
+//        ds.startSynchronousCrawl();
+//
+//        List<WebPage> results = ds.search("nikon");
+//
+//        WebPage result = results.get(0);
+//
+//        System.out.println(result);
+//
+//        assertEquals(kenRockwellUrl, result.getUrl());
+//    }
+//
+//    @Test
+//    public void albertGallatinTest() throws MalformedURLException {
+//        SearchEngine ds = new SearchEngine(albertGallatinURL);
+//
+//        ds.startSynchronousCrawl();
+//
+//        List<WebPage> results = ds.search("university");
+//
+//        WebPage result = results.get(0);
+//
+//        System.out.println(result);
+//
+//        assertEquals(albertGallatinURL, result.getUrl());
+//    }
 }

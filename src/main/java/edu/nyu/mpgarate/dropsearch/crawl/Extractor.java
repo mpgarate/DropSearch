@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
+import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -59,6 +60,7 @@ public class Extractor {
         List<URL> nextUrls = new LinkedList<URL>();
         Elements links = jsoupDoc.select("a[href]");
 
+        System.out.println("starting loop: " + links.size());
         for (Element link : links) {
             String urlStr = link.attr("abs:href");
 
@@ -68,12 +70,17 @@ public class Extractor {
                 nextUrls.add(url);
             }
         }
+        System.out.println("done loop");
 
         return nextUrls;
     }
 
     private URL getValidNextUrlOrNull(String urlStr) {
         if (urlStr.trim().length() <= 4) {
+            return null;
+        }
+
+        if (urlStr.indexOf(startUrlBase.toString()) != 0){
             return null;
         }
 
