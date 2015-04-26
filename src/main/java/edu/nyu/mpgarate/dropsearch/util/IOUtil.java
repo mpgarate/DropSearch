@@ -19,8 +19,9 @@ public class IOUtil {
     public static String getURLAsString(URL url) throws IOException {
         URLConnection connection = url.openConnection();
 
-        Map<String, List<String>> header = connection.getHeaderFields();
-        if (!header.get("Content-Type").get(0).contains("text/html")){
+        String contentType = connection.getHeaderField
+                ("Content-Type");
+        if (!contentType.contains("text/html")){
             return null;
         }
 

@@ -36,6 +36,11 @@ public class Extractor {
         return new Extractor(body, startUrl);
     }
 
+    /**
+     * Referenced for whitespace treatment:
+     * http://stackoverflow.com/questions/7240190/remove-whitespace-chars-from-string-instance
+     * @return
+     */
     public List<String> keywords() {
         LinkedList<String> keyWords = new LinkedList<String>();
 
@@ -48,6 +53,8 @@ public class Extractor {
              start = end, end = boundary.next()) {
 
             String keyWord = bodyText.substring(start, end);
+            keyWord = keyWord.replaceAll("(?U)\\s", "");
+            System.out.println("keyWord: " + keyWord);
             if (keyWord.length() > 2) {
                 keyWords.add(keyWord.toLowerCase());
             }

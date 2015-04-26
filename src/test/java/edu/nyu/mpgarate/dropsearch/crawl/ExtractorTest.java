@@ -28,6 +28,22 @@ public class ExtractorTest {
     }
 
     @Test
+    public void testKeywords_ignoresWhitespace() throws MalformedURLException {
+        String body = "<a href=\"http://www.kenrockwell.com/index" +
+                ".htm\">Home</a> &nbsp;&nbsp;&nbsp;";
+
+
+        URL url = new URL("http://example.com");
+        Extractor e = Extractor.fromBody(body, url);
+
+        List<String> keywords = e.keywords();
+
+        System.out.println(keywords);
+        assertTrue(keywords.size() == 1);
+        assertTrue(keywords.contains("home"));
+    }
+
+    @Test
     public void testNextUrls() throws MalformedURLException {
         String body = "<html><body>"
                 + "<a href='http://example.com/subdir'>foo</a>"
