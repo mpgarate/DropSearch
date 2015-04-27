@@ -1,13 +1,10 @@
 package edu.nyu.mpgarate.dropsearch;
 
-import com.mongodb.client.MongoCollection;
-import edu.nyu.mpgarate.dropsearch.util.DB;
+import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
 import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
-import org.bson.Document;
 
 import java.net.URL;
 import java.util.List;
@@ -21,7 +18,6 @@ public class SearchEngine {
 
     SearchEngine(URL startUrl){
         this.index = new SynchronizedKeywordIndex();
-
         this.crawler = new Crawler(startUrl, index);
         this.retrievalEngine = new RetrievalEngine(startUrl, index);
 

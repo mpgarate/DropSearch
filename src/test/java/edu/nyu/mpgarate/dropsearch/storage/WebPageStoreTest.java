@@ -1,7 +1,8 @@
-package edu.nyu.mpgarate.dropsearch.document;
+package edu.nyu.mpgarate.dropsearch.storage;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by mike on 4/27/15.
  */
-public class WebPageStorageTest {
+public class WebPageStoreTest {
     @Test
     public void webPageSavesInJedisTest() throws MalformedURLException, JsonProcessingException {
         WebPageStore webPageStore = new WebPageStore();

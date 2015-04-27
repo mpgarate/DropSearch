@@ -1,18 +1,14 @@
 package edu.nyu.mpgarate.dropsearch.storage;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import org.bson.Document;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
 
 /**
  * Created by mike on 4/27/15.
@@ -50,6 +46,11 @@ public class WebPageStore {
 
         try (Jedis jedis = pool.getResource()){
             String webPageStr = jedis.get("" + url.hashCode());
+
+            if (null == webPageStr){
+                return null;
+            }
+
             webPage = mapper.readValue(webPageStr, WebPage.class);
         } catch (IOException e) {
             // TODO: log this error and continue execution

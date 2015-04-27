@@ -1,6 +1,5 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
-import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

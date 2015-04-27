@@ -1,19 +1,17 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
-import com.mongodb.client.MongoCollection;
-import edu.nyu.mpgarate.dropsearch.document.DeserializationException;
-import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
-import org.bson.Document;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-
-import static com.mongodb.client.model.Filters.eq;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by mike on 4/14/15.
