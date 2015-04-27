@@ -54,7 +54,6 @@ public class Extractor {
 
             String keyWord = bodyText.substring(start, end);
             keyWord = keyWord.replaceAll("(?U)\\s", "");
-            System.out.println("keyWord: " + keyWord);
             if (keyWord.length() > 2) {
                 keyWords.add(keyWord.toLowerCase());
             }
@@ -67,7 +66,6 @@ public class Extractor {
         List<URL> nextUrls = new LinkedList<URL>();
         Elements links = jsoupDoc.select("a[href]");
 
-        System.out.println("starting loop: " + links.size());
         for (Element link : links) {
             String urlStr = link.attr("abs:href");
 
@@ -77,7 +75,6 @@ public class Extractor {
                 nextUrls.add(url);
             }
         }
-        System.out.println("done loop");
 
         return nextUrls;
     }

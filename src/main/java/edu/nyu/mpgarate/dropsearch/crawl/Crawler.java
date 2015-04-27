@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import edu.nyu.mpgarate.dropsearch.document.DeserializationException;
 import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
 import org.bson.Document;
 

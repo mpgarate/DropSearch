@@ -4,7 +4,7 @@ import com.mongodb.client.MongoCollection;
 import edu.nyu.mpgarate.dropsearch.util.DB;
 import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
 import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
-import edu.nyu.mpgarate.dropsearch.crawl.SynchronizedKeywordIndex;
+import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
 import org.bson.Document;
