@@ -1,9 +1,10 @@
 package edu.nyu.mpgarate.dropsearch.document;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
@@ -14,61 +15,72 @@ public class WebPage {
     private URL url;
     private String body;
     private Date dateVisited;
-    private Document mongoDocument;
+
+    private WebPage(){
+
+    }
 
     public WebPage(URL url, String body, Date dateVisited){
         this.url = url;
         this.body = body;
         this.dateVisited = dateVisited;
-        createMongoDocument();
     }
 
     private WebPage(URL url, String body, Date dateVisited, Document
             mongoDocument){
         this(url, body, dateVisited);
-        this.mongoDocument = mongoDocument;
     }
 
     public URL getUrl(){
         return url;
     }
 
+    private void setURl(URL url){
+        this.url = url;
+    }
+
     public String getBody(){
         return body;
     }
 
-    public ObjectId getObjectId(){
-        return mongoDocument.getObjectId("_id");
+    private void setBody(String body){
+        this.body = body;
     }
 
-    public Document getMongoDocument(){
-        return mongoDocument;
+    public Date getDateVisited(){
+        return dateVisited;
     }
 
-    private void createMongoDocument(){
-        this.mongoDocument = new Document("url", url.toString())
-                .append("body", body)
-                .append("date", dateVisited);
+    private void setDateVisited(Date dateVisited){
+        this.dateVisited = dateVisited;
     }
 
-    public String toString(){
-        return mongoDocument.toString();
+    @Override
+    public int hashCode(){
+        return new HashCodeBuilder(59, 23)
+                .append(url)
+                .append(body)
+                .append(dateVisited)
+                .toHashCode();
     }
 
-    public static WebPage fromMongoDocument(Document doc) throws DeserializationException {
-        String urlStr = doc.getString("url");
-        try {
-            URL url = new URL(urlStr);
-            String body = doc.getString("body");
-            Date date = doc.getDate("dateVisited");
-            return new WebPage(url, body, date, doc);
-        } catch (IllegalArgumentException e) {
-            throw new DeserializationException("Could not create WebPage from" +
-                    " Document. " + e);
-        } catch (MalformedURLException e){
-            throw new DeserializationException("Could not create WebPage from" +
-                    " Document with invalid URL " + urlStr);
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof WebPage)) {
+            return false;
         }
+
+        if (obj == this) {
+            return true;
+        }
+
+        WebPage wp = (WebPage) obj;
+
+        return new EqualsBuilder()
+                .append(url, wp.url)
+                .append(body, wp.body)
+                .append(dateVisited, wp.dateVisited)
+                .isEquals();
 
     }
 }

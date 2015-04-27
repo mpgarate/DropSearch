@@ -22,11 +22,8 @@ public class SearchEngine {
     SearchEngine(URL startUrl){
         this.index = new SynchronizedKeywordIndex();
 
-        MongoCollection<Document> pagesCollection = DB.getPagesCollection();
-
-        this.crawler = new Crawler(startUrl, index, pagesCollection);
-        this.retrievalEngine = new RetrievalEngine(startUrl, index,
-                pagesCollection);
+        this.crawler = new Crawler(startUrl, index);
+        this.retrievalEngine = new RetrievalEngine(startUrl, index);
 
         this.started = false;
     }

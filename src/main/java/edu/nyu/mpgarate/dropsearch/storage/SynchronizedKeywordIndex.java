@@ -1,7 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.storage;
 
-import org.bson.types.ObjectId;
-
+import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,42 +12,42 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SynchronizedKeywordIndex {
     private Object lock = new Object();
 
-    private ConcurrentHashMap<String, List<ObjectId>> map = new
+    private ConcurrentHashMap<String, List<URL>> map = new
             ConcurrentHashMap<String,
-            List<ObjectId>>();
+            List<URL>>();
 
     public SynchronizedKeywordIndex(){
 
     }
 
-    public void add(String term, ObjectId pageId) {
+    public void add(String term, URL url) {
         synchronized (lock) {
-            List<ObjectId> pagesList = map.get(term);
+            List<URL> webPageUrls = map.get(term);
 
-            if (null == pagesList) {
-                pagesList = new LinkedList<ObjectId>();
-                pagesList.add(pageId);
-                map.put(term, pagesList);
+            if (null == webPageUrls) {
+                webPageUrls = new LinkedList<URL>();
+                webPageUrls.add(url);
+                map.put(term, webPageUrls);
             } else {
-                map.put(term, pagesList);
+                map.put(term, webPageUrls);
             }
         }
     }
 
-    public void addAll(List<String> terms, ObjectId pageId){
+    public void addAll(List<String> terms, URL url){
         // make sure pageId is unique, maybe use a set?
         for(String term : terms){
-            add(term, pageId);
+            add(term, url);
         }
     }
 
-    public List<ObjectId> getObjectIds(String term){
-        List<ObjectId> objectIds = map.get(term);
+    public List<URL> getWebPageUrls(String term){
+        List<URL> webPageUrls = map.get(term);
 
-        if (null == objectIds){
-            return new LinkedList<ObjectId>();
+        if (null == webPageUrls){
+            return new LinkedList<URL>();
         }
 
-        return Collections.unmodifiableList(objectIds);
+        return Collections.unmodifiableList(webPageUrls);
     }
 }

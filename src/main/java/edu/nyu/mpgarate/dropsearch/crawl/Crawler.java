@@ -5,6 +5,7 @@ import edu.nyu.mpgarate.dropsearch.document.DeserializationException;
 import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
+import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
 import org.bson.Document;
 
@@ -21,15 +22,12 @@ public class Crawler {
     private URL startUrl;
     private SynchronizedKeywordIndex index;
     private List<CrawlerListener> listeners;
-    private MongoCollection<Document> pagesCollection;
     private final Integer maxCrawlPages;
 
-    public Crawler(URL startUrl, SynchronizedKeywordIndex index,
-                   MongoCollection<Document> pagesCollection){
+    public Crawler(URL startUrl, SynchronizedKeywordIndex index){
         this.startUrl = startUrl;
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.pagesCollection = pagesCollection;
         this.maxCrawlPages = 15;
     }
 
@@ -56,13 +54,10 @@ public class Crawler {
             Extractor extractor = Extractor.fromBody(webPage.getBody(),
                     url);
 
-            index.addAll(extractor.keywords(), webPage.getObjectId());
+            index.addAll(extractor.keywords(), webPage.getUrl());
 
-            System.out.println("getting urls");
             urls.addAll(extractor.nextUrls());
-            System.out.println("done.");
 
-            System.out.println("Visited:");
             System.out.println(url.toString());
             System.out.println(extractor.keywords());
 
@@ -79,11 +74,13 @@ public class Crawler {
      * @return the webPage or null if retrieval failed
      */
     private WebPage getOrFetchWebPage(URL url){
-        Document doc = pagesCollection.find(eq("url", url.toString())).first();
-        String body;
-        WebPage webPage;
+        WebPageStore webPageStore = new WebPageStore();
 
-        if (null == doc){
+        WebPage webPage = webPageStore.get(url);
+
+        String body;
+
+        if (null == webPage){
             try {
                 body = IOUtil.getURLAsString(url);
                 if (null == body){
@@ -97,15 +94,10 @@ public class Crawler {
 
             System.out.println("---- fetched doc from the web ----");
             webPage = new WebPage(url, body, new Date());
-            doc = webPage.getMongoDocument();
-            pagesCollection.insertOne(doc);
+
+            webPageStore.set(url, webPage);
         } else {
             System.out.println("---- grabbed doc from database ----");
-            try {
-                webPage = WebPage.fromMongoDocument(doc);
-            } catch (DeserializationException e) {
-                return null;
-            }
         }
 
         return webPage;
