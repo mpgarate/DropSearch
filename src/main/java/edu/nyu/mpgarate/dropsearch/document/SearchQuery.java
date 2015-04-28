@@ -11,11 +11,11 @@ import java.util.stream.Collectors;
  */
 public class SearchQuery {
     private String inputString;
-    private List<String> keywords;
+    private List<String> terms;
 
     private SearchQuery(String inputString){
         this.inputString = inputString;
-        this.keywords = parseKeywords(inputString);
+        this.terms = parseTerms(inputString);
     }
 
     public static SearchQuery parse(String inputString){
@@ -23,11 +23,11 @@ public class SearchQuery {
         return new SearchQuery(inputString);
     }
 
-    public List<String> getKeywords(){
-        return Collections.unmodifiableList(keywords);
+    public List<String> getTerms(){
+        return Collections.unmodifiableList(terms);
     }
 
-    private List<String> parseKeywords(String inputString){
+    private List<String> parseTerms(String inputString){
         List<String> keywords = new ArrayList<String>(Arrays.asList(inputString
                 .split("\\s+")));
 

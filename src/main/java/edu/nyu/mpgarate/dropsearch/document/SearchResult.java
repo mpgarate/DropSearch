@@ -1,14 +1,17 @@
 package edu.nyu.mpgarate.dropsearch.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by mike on 4/27/15.
  */
+
 public class SearchResult implements Comparable<SearchResult> {
     private WebPage webPage;
     private SearchQuery searchQuery;
@@ -48,7 +51,7 @@ public class SearchResult implements Comparable<SearchResult> {
         this.relevanceScore = relevanceScore;
     }
 
-    public void addKeyword(Keyword keyword){
+    public void addKeyword(Keyword keyword) {
         matchedKeywords.add(keyword);
         updateRelevanceScore();
     }

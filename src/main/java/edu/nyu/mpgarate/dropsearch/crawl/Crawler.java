@@ -26,7 +26,7 @@ public class Crawler {
         this.startUrl = startUrl;
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.maxCrawlPages = 15;
+        this.maxCrawlPages = 30;
     }
 
     public void crawl() {

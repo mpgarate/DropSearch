@@ -1,12 +1,14 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
-import edu.nyu.mpgarate.dropsearch.document.*;
+import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
+import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
+import edu.nyu.mpgarate.dropsearch.document.SearchResult;
+import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 
 import java.net.URL;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by mike on 4/14/15.
@@ -25,18 +27,18 @@ public class RetrievalEngine {
 
         WebPageStore webPageStore = new WebPageStore();
 
-        for(String term: searchQuery.getKeywords()){
-            List<KeywordMatch> termMatches = index.getWebPageUrls(term);
+        for(String term : searchQuery.getTerms()){
+            List<KeywordMatch> keywordMatches = index.getWebPageUrls(term);
 
-            for (KeywordMatch termMatch : termMatches){
-                URL url = termMatch.getUrl();
+            for (KeywordMatch keywordMatch: keywordMatches){
+                URL url = keywordMatch.getUrl();
 
                 if (results.containsKey(url)){
-                    results.get(url).addKeyword(termMatch);
+                    results.get(url).addKeyword(keywordMatch);
                 } else {
                     WebPage webPage = webPageStore.get(url);
                     SearchResult searchResult = new SearchResult(webPage, searchQuery);
-                    searchResult.addKeyword(termMatch);
+                    searchResult.addKeyword(keywordMatch);
                     results.put(url, searchResult);
                 }
             }
