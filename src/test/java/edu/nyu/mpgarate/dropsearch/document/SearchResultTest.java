@@ -24,5 +24,7 @@ public class SearchResultTest {
         SearchResult searchResult = new SearchResult(webPage, query);
 
         assertEquals(webPage, searchResult.getWebPage());
+
+        assertEquals(new Double(1), searchResult.getRelevanceScore());
     }
 }

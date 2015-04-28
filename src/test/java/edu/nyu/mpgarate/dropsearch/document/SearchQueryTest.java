@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by mike on 4/27/15.
  */
@@ -18,5 +20,7 @@ public class SearchQueryTest {
 
         SearchQuery query = SearchQuery.parse("ipsum dolor");
 
+        assertTrue(query.keywords().contains("ipsum"));
+        assertTrue(query.keywords().contains("dolor"));
     }
 }
