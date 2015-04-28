@@ -1,6 +1,8 @@
 package edu.nyu.mpgarate.dropsearch;
 
 import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
+import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
+import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
 import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
@@ -56,7 +58,7 @@ public class SearchEngine {
         new Thread(runnable).start();
     }
 
-    public List<WebPage> search(String query){
+    public List<SearchResult> search(SearchQuery query){
         return retrievalEngine.getWebPages(query);
     }
 

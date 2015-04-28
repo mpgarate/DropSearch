@@ -1,5 +1,7 @@
 package edu.nyu.mpgarate.dropsearch;
 
+import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
+import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,9 +25,9 @@ public class SearchEngineTest {
 
         ds.startSynchronousCrawl();
 
-        List<WebPage> results = ds.search("nikon");
+        List<SearchResult> results = ds.search(SearchQuery.parse("nikon"));
 
-        WebPage result = results.get(0);
+        WebPage result = results.get(0).getWebPage();
 
         System.out.println(result);
 
@@ -41,9 +43,9 @@ public class SearchEngineTest {
 
         ds.startSynchronousCrawl();
 
-        List<WebPage> results = ds.search("university");
+        List<SearchResult> results = ds.search(SearchQuery.parse("university"));
 
-        WebPage result = results.get(0);
+        WebPage result = results.get(0).getWebPage();
 
         System.out.println(result);
 

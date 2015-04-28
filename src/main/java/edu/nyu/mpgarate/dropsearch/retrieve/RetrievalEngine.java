@@ -1,13 +1,17 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
+import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
+import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * Created by mike on 4/14/15.
@@ -21,13 +25,23 @@ public class RetrievalEngine {
         this.index = index;
     }
 
-    public List<WebPage> getWebPages(String query){
-        List<URL> webPageUrls = index.getWebPageUrls(query);
+    public List<SearchResult> getWebPages(SearchQuery searchQuery){
+        Set<SearchResult> sortedSearchResults = new TreeSet<SearchResult>();
+
+        for(String keyword : searchQuery.keywords()){
+            for (WebPage webPage : lookupKeyword(keyword)){
+                sortedSearchResults.add(new SearchResult(webPage, searchQuery));
+            }
+        }
+
+        return new ArrayList<SearchResult>(sortedSearchResults);
+    }
+
+    private List<WebPage> lookupKeyword(String keyWord) {
         List<WebPage> webPages = new ArrayList<WebPage>();
 
-        for(URL webPageUrl : webPageUrls){
-            WebPage webPage = new WebPageStore().get(webPageUrl);
-            webPages.add(webPage);
+        for (URL webPageUrl : index.getWebPageUrls(keyWord)) {
+            webPages.add(new WebPageStore().get(webPageUrl));
         }
 
         return webPages;
