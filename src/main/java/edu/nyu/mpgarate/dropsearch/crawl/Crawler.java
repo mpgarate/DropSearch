@@ -1,7 +1,7 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.listener.CrawlerListener;
+import edu.nyu.mpgarate.dropsearch.util.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;

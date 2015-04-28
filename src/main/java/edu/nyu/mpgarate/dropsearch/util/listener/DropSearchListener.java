@@ -1,4 +1,4 @@
-package edu.nyu.mpgarate.dropsearch.listener;
+package edu.nyu.mpgarate.dropsearch.util.listener;
 
 /**
  * Created by mike on 4/14/15.

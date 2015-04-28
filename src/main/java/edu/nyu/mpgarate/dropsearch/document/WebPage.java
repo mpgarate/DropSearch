@@ -54,6 +54,19 @@ public class WebPage {
         this.dateVisited = dateVisited;
     }
 
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        return sb
+                .append("WebPage { ")
+                .append("url: ")
+                .append(url.toString())
+                .append(", dateVisited: ")
+                .append(dateVisited.toString())
+                .append(" }")
+                .toString();
+    }
+
     @Override
     public int hashCode(){
         return new HashCodeBuilder(59, 23)

@@ -8,10 +8,7 @@ import org.jsoup.select.Elements;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.BreakIterator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by mike on 4/15/15.
@@ -41,7 +38,8 @@ public class Extractor {
      * @return
      */
     public List<String> keywords() {
-        LinkedList<String> keyWords = new LinkedList<String>();
+        // TODO: consider the count for how many times a keyword appears
+        Set<String> keyWords = new HashSet<String>();
 
         BreakIterator boundary = BreakIterator.getWordInstance();
         boundary.setText(bodyText);
@@ -58,7 +56,7 @@ public class Extractor {
             }
         }
 
-        return keyWords;
+        return new ArrayList<String>(keyWords);
     }
 
     public List<URL> nextUrls() {

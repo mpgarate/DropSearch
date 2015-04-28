@@ -7,10 +7,8 @@ import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by mike on 4/14/15.
@@ -25,15 +23,31 @@ public class RetrievalEngine {
     }
 
     public List<SearchResult> getWebPages(SearchQuery searchQuery){
-        Set<SearchResult> sortedSearchResults = new TreeSet<SearchResult>();
+        Map<WebPage, SearchResult> results = new HashMap<WebPage,
+                SearchResult>();
 
-        for(String keyword : searchQuery.keywords()){
+        for(String keyword : searchQuery.getKeywords()){
             for (WebPage webPage : lookupKeyword(keyword)){
-                sortedSearchResults.add(new SearchResult(webPage, searchQuery));
+                if (results.containsKey(webPage)){
+                    results.get(webPage).addKeyword(keyword);
+                } else {
+                    SearchResult searchResult = new SearchResult(webPage,
+                            searchQuery);
+                    searchResult.addKeyword(keyword);
+                    results.put(webPage, searchResult);
+                }
             }
         }
 
-        return new ArrayList<SearchResult>(sortedSearchResults);
+        System.out.println("results");
+        System.out.println(results.values());
+
+        List<SearchResult> resultsCollection = new ArrayList<SearchResult>
+                (results.values());
+
+        Collections.sort(resultsCollection, Collections.reverseOrder());
+
+        return resultsCollection;
     }
 
     private List<WebPage> lookupKeyword(String keyWord) {

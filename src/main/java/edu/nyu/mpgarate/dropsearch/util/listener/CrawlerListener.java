@@ -1,4 +1,4 @@
-package edu.nyu.mpgarate.dropsearch.listener;
+package edu.nyu.mpgarate.dropsearch.util.listener;
 
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 

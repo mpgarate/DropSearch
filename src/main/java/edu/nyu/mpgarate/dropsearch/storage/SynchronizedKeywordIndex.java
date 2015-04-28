@@ -30,22 +30,24 @@ public class SynchronizedKeywordIndex {
                 term));
 
         synchronized (lock) {
-            Set<UrlNode> webPageUrls = map.get(term);
+            Set<UrlNode> urlNodes = map.get(term);
 
-            if (null == webPageUrls) {
-                webPageUrls = new ConcurrentSkipListSet<UrlNode>();
+            if (null == urlNodes) {
+                urlNodes = new ConcurrentSkipListSet<UrlNode>();
             }
 
-            webPageUrls.add(urlNode);
-            map.put(term, webPageUrls);
+            if (!urlNodes.contains(urlNode)){
+                urlNodes.add(urlNode);
+                map.put(term, urlNodes);
+            }
         }
     }
 
     public void addAll(List<String> terms, WebPage webPage){
-        // make sure pageId is unique, maybe use a set?
         for(String term : terms){
             add(term, webPage);
         }
+
     }
 
     public List<URL> getWebPageUrls(String term){
@@ -60,6 +62,8 @@ public class SynchronizedKeywordIndex {
             urls.add(urlNode.getUrl());
         }
 
+        System.out.println("got urls: " + urls);
+        System.out.println(urls.size());
         return urls;
     }
 }

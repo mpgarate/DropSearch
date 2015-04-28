@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mike on 4/14/15.
@@ -42,12 +43,19 @@ public class SearchEngineTest {
 
         ds.startSynchronousCrawl();
 
-        List<SearchResult> results = ds.search(SearchQuery.parse("university"));
+        List<SearchResult> results = ds.search(SearchQuery.parse
+                ("new york university"));
 
-        WebPage result = results.get(0).getWebPage();
+
+        System.out.println(results);
+
+        SearchResult result = results.get(0);
+        SearchResult lastResult = results.get(results.size() - 1);
 
         System.out.println(result);
+        System.out.println(lastResult);
 
-        assertEquals(albertGallatinURL, result.getUrl());
+        assertTrue(results.stream().anyMatch(sr -> sr.getWebPage().getUrl()
+                .equals(albertGallatinURL)));
     }
 }

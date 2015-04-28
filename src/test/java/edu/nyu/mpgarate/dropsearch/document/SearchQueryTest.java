@@ -20,7 +20,7 @@ public class SearchQueryTest {
 
         SearchQuery query = SearchQuery.parse("ipsum dolor");
 
-        assertTrue(query.keywords().contains("ipsum"));
-        assertTrue(query.keywords().contains("dolor"));
+        assertTrue(query.getKeywords().contains("ipsum"));
+        assertTrue(query.getKeywords().contains("dolor"));
     }
 }

@@ -3,8 +3,7 @@ package edu.nyu.mpgarate.dropsearch;
 import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.listener.DropSearchListener;
+import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 
