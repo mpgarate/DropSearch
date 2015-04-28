@@ -5,6 +5,7 @@ import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,9 +21,9 @@ public class RetrievalEngine {
         this.index = index;
     }
 
-    public List<WebPage> getWebPages(String term){
-        List<URL> webPageUrls = index.getWebPageUrls(term);
-        List<WebPage> webPages = new LinkedList<WebPage>();
+    public List<WebPage> getWebPages(String query){
+        List<URL> webPageUrls = index.getWebPageUrls(query);
+        List<WebPage> webPages = new ArrayList<WebPage>();
 
         for(URL webPageUrl : webPageUrls){
             WebPage webPage = new WebPageStore().get(webPageUrl);

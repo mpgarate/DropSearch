@@ -24,10 +24,6 @@ public class SearchEngine {
         this.started = false;
     }
 
-    public Boolean isStarted(){
-        return started;
-    }
-
     public void startSynchronousCrawl(){
         synchronized(lock) {
             if (started) {
@@ -37,6 +33,8 @@ public class SearchEngine {
         }
 
         crawler.crawl();
+
+        started = false;
     }
 
     public void startAsynchronousCrawl(){
@@ -47,19 +45,19 @@ public class SearchEngine {
             started = true;
         }
 
-        this.started = true;
         Runnable runnable = new Runnable(){
             @Override
             public void run() {
                 crawler.crawl();
+                started = false;
             }
         };
 
         new Thread(runnable).start();
     }
 
-    public List<WebPage> search(String term){
-        return retrievalEngine.getWebPages(term);
+    public List<WebPage> search(String query){
+        return retrievalEngine.getWebPages(query);
     }
 
     public void addListener(DropSearchListener listener) {
