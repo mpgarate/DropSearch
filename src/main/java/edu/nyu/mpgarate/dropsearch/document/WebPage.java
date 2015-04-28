@@ -3,7 +3,6 @@ package edu.nyu.mpgarate.dropsearch.document;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
 import java.net.URL;
 import java.util.Date;

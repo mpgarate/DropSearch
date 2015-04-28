@@ -49,10 +49,9 @@ public class Crawler {
 
             pagesVisited++;
 
-            Extractor extractor = Extractor.fromBody(webPage.getBody(),
-                    url);
+            Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
 
-            index.addAll(extractor.keywords(), webPage.getUrl());
+            index.addAll(extractor.keywords(), webPage);
 
             urls.addAll(extractor.nextUrls());
 

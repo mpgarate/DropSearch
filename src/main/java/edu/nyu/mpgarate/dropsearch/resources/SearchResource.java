@@ -26,7 +26,7 @@ public class SearchResource {
     @GET
     @Timed
     public Response startCrawl(@QueryParam("url")
-                             URL url, @QueryParam("q") String query){
+                                   URL url, @QueryParam("q") String query){
 
         SearchEngine searchEngine = SearchEngineFactory.getSearchEngine(url);
 

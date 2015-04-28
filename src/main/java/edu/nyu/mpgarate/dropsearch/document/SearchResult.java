@@ -11,7 +11,6 @@ public class SearchResult implements Comparable<SearchResult> {
     public SearchResult(WebPage webPage, SearchQuery searchQuery){
         this.webPage = webPage;
         this.searchQuery = searchQuery;
-        this.relevanceScore = 1.0;
     }
 
     public WebPage getWebPage(){
@@ -19,7 +18,18 @@ public class SearchResult implements Comparable<SearchResult> {
     }
 
     public Double getRelevanceScore(){
-        return relevanceScore;
+        if (null != relevanceScore){
+            return relevanceScore;
+        }
+
+        //   pageRank() * pageRankWeight
+        // + termRelevance() * termRelevanceWeight
+        // +
+        // def termRelevance(){
+        //
+        // }
+
+        return 1.0;
     }
 
     @Override

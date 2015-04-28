@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SearchEngineFactory {
     private final static Map<URL, SearchEngine> searchEngines =
-            new ConcurrentHashMap<URL, SearchEngine>();
+            new ConcurrentHashMap<>();
 
     public static SearchEngine getSearchEngine(URL url){
         if (null == url){

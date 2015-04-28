@@ -5,17 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mike on 4/14/15.
  */
-public class IOUtil {
+public final class IOUtil {
+
     /**
      * http://stackoverflow.com/questions/4328711/read-url-to-string-in-few-lines-of-java-code
      * @param url
      */
+
     public static String getURLAsString(URL url) throws IOException {
         URLConnection connection = url.openConnection();
 

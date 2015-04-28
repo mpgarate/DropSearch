@@ -3,7 +3,6 @@ package edu.nyu.mpgarate.dropsearch;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
@@ -11,7 +10,6 @@ import java.net.URL;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mike on 4/14/15.
@@ -39,7 +37,8 @@ public class SearchEngineTest {
     public void albertGallatinTest() throws MalformedURLException {
         URL albertGallatinURL = new URL("http://en.wikipedia" +
                 ".org/wiki/Albert_Gallatin");
-        SearchEngine ds = SearchEngineFactory.getSearchEngine(albertGallatinURL);
+        SearchEngine ds = SearchEngineFactory.getSearchEngine
+                (albertGallatinURL);
 
         ds.startSynchronousCrawl();
 

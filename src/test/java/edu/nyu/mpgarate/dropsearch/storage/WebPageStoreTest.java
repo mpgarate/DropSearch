@@ -3,9 +3,7 @@ package edu.nyu.mpgarate.dropsearch.storage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import org.junit.Test;
-import redis.clients.jedis.Jedis;
 
 import java.net.MalformedURLException;
 import java.net.URL;
