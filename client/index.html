@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <script>
+    $(function() {
+      function log( message ) {
+        $( "<div>" ).text( message ).prependTo( "#log" );
+        $( "#log" ).scrollTop( 0 );
+      }
+   
+      $( "#query" ).autocomplete({
+        source: function(request, response) {
+          $.ajax({
+            url: "http://localhost:8080/search",
+            dataType: "json",
+            data: {
+              url: "http://example.com",
+              q: request.term
+            },
+            success: function(data) {
+              console.log(data);
+              response(data);
+            }
+          });
+        },
+        minLength: 3,
+        select: function( event, ui ) {
+          console.log(event);
+          log( ui.item ?
+            "Selected: " + ui.item.label :
+            "Nothing selected, input was " + this.value);
+        },
+        open: function() {
+          $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+        },
+        close: function() {
+          $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+        }
+      });
+    });
+    </script>
+  </head>
+  <body>
+   
+  <div class="ui-widget">
+    <label for="query">Search Query:</label>
+    <input id="query">
+  </div>
+   
+  <div class="ui-widget">
+    Result:
+    <div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>
+  </div>
+   
+  </body>
+</html>
