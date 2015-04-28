@@ -20,17 +20,19 @@ public class SearchEngineTest {
     @Test
     public void kenRockwellTest() throws MalformedURLException {
         URL kenRockwellUrl = new URL("http://kenrockwell.com/nikon/d7200.htm");
+        URL d7200Url = new URL("http://kenrockwell.com/nikon/d7200.htm");
+
         SearchEngine ds = SearchEngineFactory.getSearchEngine(kenRockwellUrl);
 
         ds.startSynchronousCrawl();
 
-        List<SearchResult> results = ds.search(SearchQuery.parse("nikon"));
+        List<SearchResult> results = ds.search(SearchQuery.parse("nikon " +
+                "d7200"));
 
-        WebPage result = results.get(0).getWebPage();
+        System.out.println(results);
 
-        System.out.println(result);
-
-        assertEquals(kenRockwellUrl, result.getUrl());
+        assertTrue(results.stream().anyMatch(sr -> sr.getWebPage().getUrl()
+                .equals(d7200Url)));
     }
 
 

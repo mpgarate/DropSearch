@@ -62,8 +62,6 @@ public class SynchronizedKeywordIndex {
             urls.add(urlNode.getUrl());
         }
 
-        System.out.println("got urls: " + urls);
-        System.out.println(urls.size());
         return urls;
     }
 }

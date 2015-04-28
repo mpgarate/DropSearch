@@ -22,9 +22,11 @@ public class SearchResultTest {
         SearchQuery query = SearchQuery.parse("ipsum dolor");
 
         SearchResult searchResult = new SearchResult(webPage, query);
+        searchResult.addKeyword("ipsum");
+        searchResult.addKeyword("dolor");
 
         assertEquals(webPage, searchResult.getWebPage());
 
-        assertEquals(new Double(1), searchResult.getRelevanceScore());
+        assertEquals(new Double(2), searchResult.getRelevanceScore());
     }
 }

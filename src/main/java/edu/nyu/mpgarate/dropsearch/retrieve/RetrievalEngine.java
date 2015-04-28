@@ -39,9 +39,6 @@ public class RetrievalEngine {
             }
         }
 
-        System.out.println("results");
-        System.out.println(results.values());
-
         List<SearchResult> resultsCollection = new ArrayList<SearchResult>
                 (results.values());
 
