@@ -6,7 +6,7 @@ import edu.nyu.mpgarate.dropsearch.document.WebPage;
  * Created by mike on 4/28/15.
  */
 public class VectorSpaceImportance {
-    public static Double of(WebPage webPage, String term){
-        return 1.0;
+    public static Double of(Integer occCount, Integer docSize){
+        return (double)occCount / docSize;
     }
 }

@@ -1,8 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
-import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
-import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import edu.nyu.mpgarate.dropsearch.document.*;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 
@@ -23,18 +21,23 @@ public class RetrievalEngine {
     }
 
     public List<SearchResult> getWebPages(SearchQuery searchQuery){
-        Map<WebPage, SearchResult> results = new HashMap<WebPage,
-                SearchResult>();
+        Map<URL, SearchResult> results = new HashMap<URL, SearchResult>();
 
-        for(String keyword : searchQuery.getKeywords()){
-            for (WebPage webPage : lookupKeyword(keyword)){
-                if (results.containsKey(webPage)){
-                    results.get(webPage).addKeyword(keyword);
+        WebPageStore webPageStore = new WebPageStore();
+
+        for(String term: searchQuery.getKeywords()){
+            List<KeywordMatch> termMatches = index.getWebPageUrls(term);
+
+            for (KeywordMatch termMatch : termMatches){
+                URL url = termMatch.getUrl();
+
+                if (results.containsKey(url)){
+                    results.get(url).addKeyword(termMatch);
                 } else {
-                    SearchResult searchResult = new SearchResult(webPage,
-                            searchQuery);
-                    searchResult.addKeyword(keyword);
-                    results.put(webPage, searchResult);
+                    WebPage webPage = webPageStore.get(url);
+                    SearchResult searchResult = new SearchResult(webPage, searchQuery);
+                    searchResult.addKeyword(termMatch);
+                    results.put(url, searchResult);
                 }
             }
         }
@@ -45,15 +48,5 @@ public class RetrievalEngine {
         Collections.sort(resultsCollection, Collections.reverseOrder());
 
         return resultsCollection;
-    }
-
-    private List<WebPage> lookupKeyword(String keyWord) {
-        List<WebPage> webPages = new ArrayList<WebPage>();
-
-        for (URL webPageUrl : index.getWebPageUrls(keyWord)) {
-            webPages.add(new WebPageStore().get(webPageUrl));
-        }
-
-        return webPages;
     }
 }

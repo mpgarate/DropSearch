@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
+import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
@@ -19,12 +20,16 @@ public class ExtractorTest {
         URL url = new URL("http://example.com");
         Extractor e = Extractor.fromBody(body, url);
 
-        List<String> keywords = e.keywords();
+        List<Keyword> keywords = e.keywords();
 
-        assertTrue(keywords.contains("lorem"));
-        assertTrue(keywords.contains("mailman"));
-        assertTrue(keywords.contains("man"));
-        assertTrue(keywords.contains("mail-man"));
+        assertTrue(keywords.stream().anyMatch(
+                kw -> kw.getTerm().equals("lorem")));
+        assertTrue(keywords.stream().anyMatch(
+                kw -> kw.getTerm().equals("mailman")));
+        assertTrue(keywords.stream().anyMatch(
+                kw -> kw.getTerm().equals("man")));
+        assertTrue(keywords.stream().anyMatch(
+                kw -> kw.getTerm().equals("mail-man")));
     }
 
     @Test
@@ -36,11 +41,12 @@ public class ExtractorTest {
         URL url = new URL("http://example.com");
         Extractor e = Extractor.fromBody(body, url);
 
-        List<String> keywords = e.keywords();
+        List<Keyword> keywords = e.keywords();
 
         System.out.println(keywords);
         assertTrue(keywords.size() == 1);
-        assertTrue(keywords.contains("home"));
+        assertTrue(keywords.stream().anyMatch(kw -> kw.getTerm().equals
+                ("home")));
     }
 
     @Test

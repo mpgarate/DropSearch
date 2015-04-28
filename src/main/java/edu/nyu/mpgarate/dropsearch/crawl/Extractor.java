@@ -1,5 +1,7 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
+import edu.nyu.mpgarate.dropsearch.algorithm.VectorSpaceImportance;
+import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,9 +39,10 @@ public class Extractor {
      * http://stackoverflow.com/questions/7240190/remove-whitespace-chars-from-string-instance
      * @return
      */
-    public List<String> keywords() {
+    public List<Keyword> keywords() {
         // TODO: consider the count for how many times a keyword appears
-        Set<String> keyWords = new HashSet<String>();
+
+        List<String> keywordList = new ArrayList<String>();
 
         BreakIterator boundary = BreakIterator.getWordInstance();
         boundary.setText(bodyText);
@@ -52,11 +55,34 @@ public class Extractor {
             String keyWord = bodyText.substring(start, end);
             keyWord = keyWord.replaceAll("(?U)\\s", "");
             if (keyWord.length() > 2) {
-                keyWords.add(keyWord.toLowerCase());
+                keywordList.add(keyWord.toLowerCase());
             }
         }
 
-        return new ArrayList<String>(keyWords);
+        Integer totalKeywords = keywordList.size();
+        
+        Map<String, Integer> keywordCount = new HashMap<String, Integer>();
+
+        for (String term : keywordList){
+            Integer prevCount = 0;
+
+            if (keywordCount.containsKey(term)){
+                prevCount = keywordCount.get(term);
+            }
+
+            keywordCount.put(term, prevCount + 1);
+        }
+
+        List<Keyword> keywords = new ArrayList<>();
+
+        for (String term : keywordCount.keySet()){
+            Integer occCount = keywordCount.get(term);
+            Keyword keyword = new Keyword(term, VectorSpaceImportance.of
+                    (occCount, totalKeywords));
+            keywords.add(keyword);
+        }
+
+        return keywords;
     }
 
     public List<URL> nextUrls() {

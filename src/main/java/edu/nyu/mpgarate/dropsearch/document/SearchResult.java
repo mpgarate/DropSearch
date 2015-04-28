@@ -13,12 +13,12 @@ public class SearchResult implements Comparable<SearchResult> {
     private WebPage webPage;
     private SearchQuery searchQuery;
     private Double relevanceScore;
-    private Set<String> keywords;
+    private Set<Keyword> matchedKeywords;
 
     public SearchResult(WebPage webPage, SearchQuery searchQuery){
         this.webPage = webPage;
         this.searchQuery = searchQuery;
-        this.keywords = new HashSet<String>();
+        this.matchedKeywords = new HashSet<Keyword>();
         updateRelevanceScore();
     }
 
@@ -39,11 +39,17 @@ public class SearchResult implements Comparable<SearchResult> {
         //
         // }
 
-        relevanceScore = 1.0 * keywords.size();
+        Double relevanceScore = 0.0;
+
+        for (Keyword kw : matchedKeywords){
+            relevanceScore += kw.getWeight();
+        }
+
+        this.relevanceScore = relevanceScore;
     }
 
-    public void addKeyword(String keyword){
-        keywords.add(keyword);
+    public void addKeyword(Keyword keyword){
+        matchedKeywords.add(keyword);
         updateRelevanceScore();
     }
 
