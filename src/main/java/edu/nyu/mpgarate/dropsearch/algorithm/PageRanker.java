@@ -27,33 +27,47 @@ public class PageRanker {
     private  SynchronizedKeywordIndex index;
 
     public PageRanker(SynchronizedKeywordIndex index){
+        LOGGER.info("constructing pageRanker");
         Integer currentEdge = 0;
 
         WebPageStore webPageStore = new WebPageStore();
 
-        for (URL url : index.getAllUrls()) {
+        Set<URL> allUrls = new HashSet<URL>(index.getAllUrls());
+
+        LOGGER.info("starting to add urls");
+        for (URL url : allUrls){
             WebPage webPage = webPageStore.get(url);
 
             Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
 
             for (URL nextUrl : extractor.nextUrls()) {
-                graph.addEdge(currentEdge, url, nextUrl);
-                currentEdge++;
+                if (allUrls.contains(nextUrl)) {
+                    graph.addEdge(currentEdge, url, nextUrl);
+                    currentEdge++;
+                }
             }
         }
+
+        LOGGER.info("done construction.");
+
     }
 
     /**
      * https://github.com/castagna/mr-pagerank/blob/master/src/main/java/com/talis/labs/pagerank/jung/JungPageRank.java
      */
     public void evaluate(){
+        LOGGER.info("begin evaluate");
         PageRank<URL, Integer> pageRank = new PageRank<URL, Integer>(graph, 0.85);
+        LOGGER.info("begin pageRank.evaluate()");
         pageRank.evaluate();
+        LOGGER.info("eng pageRank.evaluate()");
 
         Map<URL, Double> results = new HashMap<URL, Double>();
         for (URL v : graph.getVertices()) {
             results.put(v, pageRank.getVertexScore(v));
         }
+
+        LOGGER.info("got results");
 
         Map<URL, Double> resultStream = results.entrySet()
                 .stream()
@@ -61,12 +75,12 @@ public class PageRanker {
                 .limit(10)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+        LOGGER.info("sorted results");
+
         for (URL url : resultStream.keySet()){
             LOGGER.info(url.toString());
             LOGGER.info(resultStream.get(url).toString());
         }
-
-
     }
 
 

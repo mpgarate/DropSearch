@@ -39,8 +39,8 @@ public class SearchResource {
 
         System.out.println(results);
 
-        List resultUrls = results.stream().map(sr -> new Object[] {sr
-                .getWebPage().getUrl(), sr.getRelevanceScore()}).collect
+        List resultUrls = results.stream().map(sr -> new Object[] {sr.getUrl
+                (), sr.getRelevanceScore()}).collect
                 (Collectors.toList());
 
 

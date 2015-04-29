@@ -31,7 +31,7 @@ public class SearchEngineTest {
 
         System.out.println(results);
 
-        assertTrue(results.stream().anyMatch(sr -> sr.getWebPage().getUrl()
+        assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
                 .equals(d7200Url)));
     }
 
@@ -46,7 +46,7 @@ public class SearchEngineTest {
         ds.startSynchronousCrawl();
 
         List<SearchResult> results = ds.search(SearchQuery.parse
-                ("new york university"));
+                ("university"));
 
 
         System.out.println(results);
@@ -57,7 +57,12 @@ public class SearchEngineTest {
         System.out.println(result);
         System.out.println(lastResult);
 
-        assertTrue(results.stream().anyMatch(sr -> sr.getWebPage().getUrl()
+        assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
                 .equals(albertGallatinURL)));
     }
+
+//    @Test
+//    public void powerPirateTest() throws MalformedURLException {
+//        URL = new URL("http://powerpirate.com");
+//    }
 }

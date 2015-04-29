@@ -13,24 +13,24 @@ import java.util.Set;
  */
 
 public class SearchResult implements Comparable<SearchResult> {
-    private WebPage webPage;
     private SearchQuery searchQuery;
     private Double relevanceScore;
     private Set<Keyword> matchedKeywords;
+    private URL url;
 
-    public SearchResult(WebPage webPage, SearchQuery searchQuery){
-        this.webPage = webPage;
+    public SearchResult(URL url, SearchQuery searchQuery){
+        this.url = url;
         this.searchQuery = searchQuery;
         this.matchedKeywords = new HashSet<Keyword>();
         updateRelevanceScore();
     }
 
-    public WebPage getWebPage(){
-        return webPage;
-    }
-
     public Double getRelevanceScore() {
         return relevanceScore;
+    }
+
+    public URL getUrl(){
+        return url;
     }
 
     private void updateRelevanceScore(){
@@ -61,7 +61,7 @@ public class SearchResult implements Comparable<SearchResult> {
         return new StringBuilder()
                 .append("SearchResult {")
                 .append("url: ")
-                .append(webPage.getUrl())
+                .append(url.toString())
                 .append(", relevanceScore: ")
                 .append(relevanceScore)
                 .append(" }")
@@ -77,8 +77,8 @@ public class SearchResult implements Comparable<SearchResult> {
     @Override
     public int hashCode(){
         return new HashCodeBuilder(59, 23)
-                .append(webPage)
                 .append(searchQuery)
+                .append(url)
                 .append(relevanceScore)
                 .toHashCode();
     }
@@ -96,8 +96,8 @@ public class SearchResult implements Comparable<SearchResult> {
         SearchResult sr = (SearchResult) obj;
 
         return new EqualsBuilder()
-                .append(webPage, sr.webPage)
                 .append(searchQuery, sr.searchQuery)
+                .append(url, sr.url)
                 .append(relevanceScore, sr.relevanceScore)
                 .isEquals();
     }

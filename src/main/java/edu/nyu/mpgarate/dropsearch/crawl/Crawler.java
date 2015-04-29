@@ -1,22 +1,21 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
-import edu.nyu.mpgarate.dropsearch.util.listener.CrawlerListener;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
+import edu.nyu.mpgarate.dropsearch.util.listener.CrawlerListener;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by mike on 4/14/15.
  */
 public class Crawler {
+    private final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
     private URL startUrl;
     private SynchronizedKeywordIndex index;
     private List<CrawlerListener> listeners;
@@ -26,20 +25,27 @@ public class Crawler {
         this.startUrl = startUrl;
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.maxCrawlPages = 30;
+        this.maxCrawlPages = 10000;
+
     }
 
+
+
     public void crawl() {
-        Queue<URL> urls = new LinkedList<URL>();
+        Set<URL> seenUrls = new HashSet<URL>();
+        Queue<URL> urls = new LinkedList<>();
+
 
         int pagesVisited = 0;
 
         urls.add(startUrl);
+        seenUrls.add(startUrl);
 
         while (!urls.isEmpty() && pagesVisited < maxCrawlPages){
+
             URL url = urls.remove();
 
-            System.out.println(url);
+//            LOGGER.info("visiting url: " + url);
 
             WebPage webPage = getOrFetchWebPage(url);
 
@@ -49,14 +55,26 @@ public class Crawler {
 
             pagesVisited++;
 
+            if (pagesVisited % 100 == 0){
+                LOGGER.info("pagesVisited: " + pagesVisited);
+            }
+
             Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
 
             index.addAll(extractor.keywords(), webPage);
 
-            urls.addAll(extractor.nextUrls());
+            List<URL> nextUrls = new ArrayList<URL>();
 
-            System.out.println(url.toString());
-            System.out.println(extractor.keywords());
+            // TODO: don't add URLs to queue if there are greater than
+            // maxCrawlPages - pagesVisited
+            for (URL nextUrl : extractor.nextUrls()){
+                if (!seenUrls.contains(nextUrl)) {
+                    seenUrls.add(nextUrl);
+                    nextUrls.add(nextUrl);
+                }
+            }
+
+            urls.addAll(nextUrls);
 
             fireVisitedWebPageEvent(webPage);
         }
@@ -82,17 +100,18 @@ public class Crawler {
                     return null;
                 }
             } catch (IOException e) {
-                System.out.println("---- could not get page ----");
-                System.out.println(url.toString());
+                LOGGER.info("---- could not get page ----");
+                LOGGER.info(url.toString());
                 return null;
             }
 
-            System.out.println("---- fetched doc from the web ----");
+            LOGGER.info("---- fetched doc from the web ----");
+            LOGGER.info(url.toString());
             webPage = new WebPage(url, body, new Date());
 
             webPageStore.set(url, webPage);
         } else {
-            System.out.println("---- grabbed doc from database ----");
+//            LOGGER.info("---- grabbed doc from database ----");
         }
 
         return webPage;
