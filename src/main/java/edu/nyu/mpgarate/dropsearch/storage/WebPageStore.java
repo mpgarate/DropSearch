@@ -9,6 +9,10 @@ import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by mike on 4/27/15.

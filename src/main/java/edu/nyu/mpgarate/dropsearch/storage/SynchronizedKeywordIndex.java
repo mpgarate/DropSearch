@@ -19,14 +19,17 @@ public class SynchronizedKeywordIndex {
     private ConcurrentHashMap<String, Set<UrlNode>> map = new
             ConcurrentHashMap<>();
 
+    private Set<URL> allUrls = new HashSet<URL>();
+
     public SynchronizedKeywordIndex(){
 
     }
 
     public void addAll(List<Keyword> keywords, WebPage webPage){
+        URL url = webPage.getUrl();
+
         for(Keyword keyword : keywords){
             String term = keyword.getTerm();
-            URL url = webPage.getUrl();
 
             UrlNode urlNode = new UrlNode(url, keyword.getWeight());
 
@@ -44,9 +47,10 @@ public class SynchronizedKeywordIndex {
             }
         }
 
+        allUrls.add(url);
     }
 
-    public List<KeywordMatch> getWebPageUrls(String term){
+    public List<KeywordMatch> getKeywordMatches(String term){
         Set<UrlNode> urlNodes = map.get(term);
 
         if (null == urlNodes){
@@ -62,5 +66,9 @@ public class SynchronizedKeywordIndex {
         }
 
         return matches;
+    }
+
+    public List<URL> getAllUrls(){
+        return new ArrayList<URL>(allUrls);
     }
 }

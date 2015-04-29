@@ -33,6 +33,8 @@ dependencies {
     compile group:'commons-validator', name: 'commons-validator', version: '1' +
             '.4.0'
     compile group: 'redis.clients', name: 'jedis', version: '2.6.2'
+    compile group: 'net.sf.jung', name: 'jung-graph-impl', version: '2.0.1'
+    compile group: 'net.sf.jung', name: 'jung-algorithms', version: '2.0.1'
 }
 
 run {

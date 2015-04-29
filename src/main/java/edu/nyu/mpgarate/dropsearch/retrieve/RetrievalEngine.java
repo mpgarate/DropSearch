@@ -28,7 +28,7 @@ public class RetrievalEngine {
         WebPageStore webPageStore = new WebPageStore();
 
         for(String term : searchQuery.getTerms()){
-            List<KeywordMatch> keywordMatches = index.getWebPageUrls(term);
+            List<KeywordMatch> keywordMatches = index.getKeywordMatches(term);
 
             for (KeywordMatch keywordMatch: keywordMatches){
                 URL url = keywordMatch.getUrl();

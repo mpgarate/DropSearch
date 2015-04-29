@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch;
 
+import edu.nyu.mpgarate.dropsearch.algorithm.PageRanker;
 import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
@@ -58,7 +59,11 @@ public class SearchEngine {
     }
 
     public List<SearchResult> search(SearchQuery query){
-        return retrievalEngine.getWebPages(query);
+        List<SearchResult> searchResults = retrievalEngine.getWebPages(query);
+
+        new PageRanker(index).evaluate();
+
+        return searchResults;
     }
 
     public void addListener(DropSearchListener listener) {
