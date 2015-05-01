@@ -61,8 +61,27 @@ public class SearchEngineTest {
                 .equals(albertGallatinURL)));
     }
 
-//    @Test
-//    public void powerPirateTest() throws MalformedURLException {
-//        URL = new URL("http://powerpirate.com");
-//    }
+    @Test
+    public void powerPirateTest() throws MalformedURLException {
+        URL powerPirateUrl = new URL("http://powerpirate.com/");
+
+        SearchEngine ds = SearchEngineFactory.getSearchEngine
+                (powerPirateUrl);
+
+        ds.startSynchronousCrawl();
+
+        List<SearchResult> results = ds.search(SearchQuery.parse
+                ("pirate press ping pong"));
+
+        System.out.println(results);
+
+        SearchResult result = results.get(0);
+        SearchResult lastResult = results.get(results.size() - 1);
+
+        System.out.println(result);
+        System.out.println(lastResult);
+
+        assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
+                .equals(powerPirateUrl)));
+    }
 }

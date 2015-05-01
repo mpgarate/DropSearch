@@ -25,7 +25,7 @@ public class Crawler {
         this.startUrl = startUrl;
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.maxCrawlPages = 10000;
+        this.maxCrawlPages = 50;
 
     }
 
@@ -45,7 +45,7 @@ public class Crawler {
 
             URL url = urls.remove();
 
-//            LOGGER.info("visiting url: " + url);
+            LOGGER.info("visiting url: " + url);
 
             WebPage webPage = getOrFetchWebPage(url);
 
@@ -97,11 +97,13 @@ public class Crawler {
             try {
                 body = IOUtil.getURLAsString(url);
                 if (null == body){
+                    LOGGER.info("---- got null body ----");
                     return null;
                 }
             } catch (IOException e) {
                 LOGGER.info("---- could not get page ----");
                 LOGGER.info(url.toString());
+//                throw new RuntimeException(e);
                 return null;
             }
 
