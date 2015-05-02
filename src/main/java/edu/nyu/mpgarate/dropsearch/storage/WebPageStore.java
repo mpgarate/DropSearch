@@ -33,10 +33,7 @@ public class WebPageStore {
         synchronized (LOCK) {
             WebPage foundPage = ds.find(WebPage.class, "url", url).get();
 
-            if (null == foundPage) {
-                LOGGER.info("not a duplicate");
-            } else {
-                LOGGER.info("we found a duplicate");
+            if (null != foundPage) {
                 ds.delete(WebPage.class, foundPage.getId());
             }
 
@@ -44,13 +41,23 @@ public class WebPageStore {
         }
     }
 
-    public WebPage get(URL url){
-        if (null == url){
+    public WebPage get(URL url, URL startUrl){
+        if (null == url || startUrl == null){
             throw new NullPointerException();
         }
 
-        WebPage webPage = ds.find(WebPage.class, "url", url.toString()).get();
+        WebPage webPage = ds.find(WebPage.class, "url",
+                url.toString()).filter("startUrl", startUrl.toString()).get();
 
         return webPage;
+    }
+
+    public void deleteAllEngineUrls(URL startUrl){
+        if (null == startUrl){
+            throw new NullPointerException();
+        }
+
+        ds.delete(ds.createQuery(WebPage.class).filter("startUrl", startUrl
+                .toString()));
     }
 }

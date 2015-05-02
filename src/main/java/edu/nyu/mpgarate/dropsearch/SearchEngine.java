@@ -4,9 +4,10 @@ import edu.nyu.mpgarate.dropsearch.algorithm.PageRanker;
 import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
+import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
+import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 
 import java.net.URL;
 import java.util.List;
@@ -17,12 +18,18 @@ public class SearchEngine {
     private RetrievalEngine retrievalEngine;
     private Boolean started;
     private Object lock = new Object();
+    private Thread crawlThread;
+    private Runnable crawlRunnable;
+    private URL startUrl;
 
     SearchEngine(URL startUrl){
+        if (null == startUrl){
+            throw new NullPointerException();
+        }
+        this.startUrl = startUrl;
         this.index = new SynchronizedKeywordIndex();
         this.crawler = new Crawler(startUrl, index);
         this.retrievalEngine = new RetrievalEngine(startUrl, index);
-
         this.started = false;
     }
 
@@ -47,7 +54,7 @@ public class SearchEngine {
             started = true;
         }
 
-        Runnable runnable = new Runnable(){
+       crawlRunnable = new Runnable(){
             @Override
             public void run() {
                 crawler.crawl();
@@ -55,15 +62,26 @@ public class SearchEngine {
             }
         };
 
-        new Thread(runnable).start();
+        crawlThread = new Thread(crawlRunnable);
+        crawlThread.start();
     }
 
     public List<SearchResult> search(SearchQuery query){
         List<SearchResult> searchResults = retrievalEngine.getWebPages(query);
 
-        new PageRanker(index).evaluate();
+        new PageRanker(index, startUrl).evaluate();
 
         return searchResults;
+    }
+
+    public void terminate(){
+        synchronized (lock) {
+            if (started && crawlThread != null) {
+                crawlThread.interrupt();
+            }
+        }
+
+        new WebPageStore().deleteAllEngineUrls(startUrl);
     }
 
     public void addListener(DropSearchListener listener) {

@@ -26,15 +26,17 @@ public class WebPageStoreTest {
         WebPageStore webPageStore = new WebPageStore();
 
         URL url = new URL("http://example.com");
+        URL startUrl = new URL("http://example.com");
+
         String body = "lorem ipsum dolor sit amet";
 
-        WebPage webPage = new WebPage(url, body, new Date());
+        WebPage webPage = new WebPage(url, body, new Date(), startUrl);
 
         ObjectMapper mapper = new ObjectMapper();
 
         webPageStore.save(webPage);
 
-        WebPage wp2 = webPageStore.get(webPage.getUrl());
+        WebPage wp2 = webPageStore.get(webPage.getUrl(), startUrl);
         assertEquals(webPage, wp2);
     }
 
@@ -44,8 +46,10 @@ public class WebPageStoreTest {
                 "testdb");
 
         URL url = new URL("http://example.com");
+        URL startUrl = new URL("http://example.com");
+
         String body = "lorem ipsum dolor sit amet";
-        WebPage webPage = new WebPage(url, body, new Date());
+        WebPage webPage = new WebPage(url, body, new Date(), startUrl);
 
         ds.save(webPage);
 

@@ -26,7 +26,6 @@ public class Crawler {
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
         this.maxCrawlPages = 50;
-
     }
 
 
@@ -78,6 +77,7 @@ public class Crawler {
 
             fireVisitedWebPageEvent(webPage);
         }
+
     }
 
     /**
@@ -89,7 +89,7 @@ public class Crawler {
     private WebPage getOrFetchWebPage(URL url){
         WebPageStore webPageStore = new WebPageStore();
 
-        WebPage webPage = webPageStore.get(url);
+        WebPage webPage = webPageStore.get(url, startUrl);
 
         String body;
 
@@ -102,14 +102,14 @@ public class Crawler {
                 }
             } catch (IOException e) {
                 LOGGER.info("---- could not get page ----");
+                LOGGER.info(e.toString());
                 LOGGER.info(url.toString());
-//                throw new RuntimeException(e);
                 return null;
             }
 
             LOGGER.info("---- fetched doc from the web ----");
             LOGGER.info(url.toString());
-            webPage = new WebPage(url, body, new Date());
+            webPage = new WebPage(url, body, new Date(), startUrl);
 
             webPageStore.save(webPage);
         } else {

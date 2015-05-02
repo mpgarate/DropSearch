@@ -27,15 +27,18 @@ public class WebPage {
     private String url;
     private String body;
     private Date dateVisited;
+    @Indexed
+    private String startUrl;
 
     private WebPage(){
 
     }
 
-    public WebPage(URL url, String body, Date dateVisited){
-        setUrl(url);
+    public WebPage(URL url, String body, Date dateVisited, URL startUrl){
+        this.url = url.toString();
         this.body = body;
         this.dateVisited = dateVisited;
+        this.startUrl = startUrl.toString();
     }
 
     public ObjectId getId(){
@@ -52,8 +55,14 @@ public class WebPage {
         }
     }
 
-    private void setUrl(URL url){
-        this.url = url.toString();
+    public URL getStartUrl(){
+        try {
+            return new URL(startUrl);
+        } catch (MalformedURLException e) {
+            LOGGER.warning("Malformed URL from Mongo. ");
+            LOGGER.warning(e.toString());
+            return null;
+        }
     }
 
     public String getBody(){

@@ -45,6 +45,8 @@ public class SearchEngineTest {
 
         ds.startSynchronousCrawl();
 
+        System.out.println("done crawl");
+
         List<SearchResult> results = ds.search(SearchQuery.parse
                 ("university"));
 

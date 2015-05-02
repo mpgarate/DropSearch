@@ -26,7 +26,7 @@ public class PageRanker {
 
     private  SynchronizedKeywordIndex index;
 
-    public PageRanker(SynchronizedKeywordIndex index){
+    public PageRanker(SynchronizedKeywordIndex index, URL startUrl){
         LOGGER.info("constructing pageRanker");
         Integer currentEdge = 0;
 
@@ -36,7 +36,7 @@ public class PageRanker {
 
         LOGGER.info("starting to add urls");
         for (URL url : allUrls){
-            WebPage webPage = webPageStore.get(url);
+            WebPage webPage = webPageStore.get(url, startUrl);
 
             Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
 

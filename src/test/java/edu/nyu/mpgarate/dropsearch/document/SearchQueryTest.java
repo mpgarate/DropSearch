@@ -15,8 +15,9 @@ public class SearchQueryTest {
     @Test
     public void searchQueryTest_construction() throws MalformedURLException {
         URL url = new URL("http://example.com");
+        URL startUrl = new URL("http://example.com");
         String body = "lorem ipsum dolor sit amet";
-        WebPage webPage = new WebPage(url, body, new Date());
+        WebPage webPage = new WebPage(url, body, new Date(), startUrl);
 
         SearchQuery query = SearchQuery.parse("ipsum dolor");
 
