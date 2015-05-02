@@ -24,6 +24,20 @@ public class Keyword {
     }
 
     @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Keyword {");
+        sb.append(" term: ");
+        sb.append(term);
+        sb.append(", weight: ");
+        sb.append(weight);
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+    @Override
     public int hashCode(){
         return new HashCodeBuilder(59, 23)
                 .append(term)

@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
@@ -72,4 +74,36 @@ public class ExtractorTest {
         assertFalse(nextUrls.contains(new URI("http://google.com")));
         assertFalse(nextUrls.contains(new URI("http://example.com/image.jpg")));
     }
+
+    @Test
+    public void testKeywords_removesStopwords() throws URISyntaxException {
+        String body = "lorem ipsum any bEcause been could be that so some " +
+                "banana";
+
+        List<String> ignoredWords = Arrays.asList(new String[]{"any",
+                "because",
+                "bEcause",
+                "been",
+                "could",
+                "be", "that", "so", "some"});
+
+
+        URI url = new URI("http://example.com");
+        Extractor e = Extractor.fromBody(body, url);
+
+        List<Keyword> keywords = e.keywords();
+
+        System.out.println(keywords);
+        assertTrue(keywords.stream().anyMatch(kw -> kw.getTerm().equals
+                ("lorem")));
+
+        assertTrue(keywords.stream().anyMatch(kw -> kw.getTerm().equals
+                ("ipsum")));
+        assertTrue(keywords.stream().anyMatch(kw -> kw.getTerm().equals
+                ("banana")));
+
+        assertFalse(keywords.stream().anyMatch(kw -> ignoredWords.contains(kw
+                .getTerm())));
+    }
+
 }

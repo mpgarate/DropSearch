@@ -8,6 +8,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.BreakIterator;
@@ -23,14 +27,32 @@ public class Extractor {
     private final String bodyText;
     private final URI startUrl;
     private final URI startUrlBase;
+    private final Set<String> stopwords;
 
     private Extractor(String body, URI startUrl) {
         this.jsoupDoc = Jsoup.parse(body);
         this.bodyText = jsoupDoc.body().text();
         this.startUrl = startUrl;
         this.startUrlBase = getUrlBase(startUrl);
+        this.stopwords = loadStopwords();
 
         jsoupDoc.setBaseUri(startUrl.toString());
+    }
+
+    private Set<String> loadStopwords(){
+        InputStream in = Extractor.class.getClassLoader().getResourceAsStream
+                ("stopwords.csv");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+        try {
+            String line = reader.readLine();
+            return new HashSet<String>(Arrays.asList(line.split
+                    (",")));
+        } catch (IOException e) {
+            LOGGER.warning("Could not load stopwords.");
+            LOGGER.warning(e.toString());
+            return Collections.emptySet();
+        }
     }
 
     public static Extractor fromBody(String body, URI startUrl) {
@@ -57,8 +79,10 @@ public class Extractor {
 
             String keyWord = bodyText.substring(start, end);
             keyWord = CharMatcher.WHITESPACE.removeFrom(keyWord);
-            if (keyWord.length() > 2) {
-                keywordList.add(keyWord.toLowerCase());
+            keyWord = keyWord.toLowerCase();
+
+            if (keyWord.length() > 2 && !stopwords.contains(keyWord)) {
+                keywordList.add(keyWord);
             }
         }
 

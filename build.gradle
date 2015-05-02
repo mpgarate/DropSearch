@@ -41,9 +41,12 @@ run {
     args 'server'
 }
 
-// use gradle shadowJar
 jar {
     manifest {
         attributes 'Main-Class': mainClassName
+    }
+
+    from ('src/main/java'){
+        include 'resources/**/*'
     }
 }
