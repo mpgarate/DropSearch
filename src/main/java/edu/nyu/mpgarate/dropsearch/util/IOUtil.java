@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by mike on 4/14/15.
@@ -26,7 +27,8 @@ public final class IOUtil {
         }
 
         BufferedReader reader = new BufferedReader(
-                new InputStreamReader(connection.getInputStream())
+                new InputStreamReader(connection.getInputStream(),
+                        StandardCharsets.UTF_8)
         );
 
         StringBuilder sb = new StringBuilder();

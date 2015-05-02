@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
+import com.google.common.base.CharMatcher;
 import edu.nyu.mpgarate.dropsearch.algorithm.VectorSpaceImportance;
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import org.jsoup.Jsoup;
@@ -55,7 +56,7 @@ public class Extractor {
              start = end, end = boundary.next()) {
 
             String keyWord = bodyText.substring(start, end);
-            keyWord = keyWord.replaceAll("(?U)\\s", "");
+            keyWord = CharMatcher.WHITESPACE.removeFrom(keyWord);
             if (keyWord.length() > 2) {
                 keywordList.add(keyWord.toLowerCase());
             }
@@ -77,8 +78,10 @@ public class Extractor {
 
         List<Keyword> keywords = new ArrayList<>();
 
-        for (String term : keywordCount.keySet()){
-            Integer occCount = keywordCount.get(term);
+        for(Map.Entry<String, Integer> entry : keywordCount.entrySet()){
+            Integer occCount = entry.getValue();
+            String term = entry.getKey();
+
             Keyword keyword = new Keyword(term, VectorSpaceImportance.of
                     (occCount, totalKeywords));
             keywords.add(keyword);
@@ -115,16 +118,6 @@ public class Extractor {
 
         URI url = startUrlBase.resolve(urlStr);
         URI urlBase = getUrlBase(url);
-
-        try {
-            URI fullUrl = new URI(urlBase.getScheme(), urlBase.getHost(), url
-                    .getPath(), url.getFragment());
-        } catch (URISyntaxException e) {
-            LOGGER.warning("URISyntaxException");
-            LOGGER.warning(e.toString());
-            e.printStackTrace();
-        }
-
 
         if (startUrlBase.equals(urlBase) &&
                 urlIsNotSamePageAnchor(url) &&

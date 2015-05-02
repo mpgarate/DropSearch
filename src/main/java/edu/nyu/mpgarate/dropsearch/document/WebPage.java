@@ -76,7 +76,7 @@ public class WebPage {
     }
 
     public Date getDateVisited(){
-        return dateVisited;
+        return new Date(dateVisited.getTime());
     }
 
     private void setDateVisited(Date dateVisited){

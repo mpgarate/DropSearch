@@ -18,6 +18,8 @@ public class SearchEngineFactory {
     private final static Queue<URI> searchEngineQueue = new
             ConcurrentLinkedDeque<>();
 
+    private final static Object LOCK = new Object();
+
     public static SearchEngine getSearchEngine(URI url){
         if (null == url){
             throw new IllegalArgumentException("url must not be empty.");
@@ -25,7 +27,7 @@ public class SearchEngineFactory {
 
         SearchEngine searchEngine;
 
-        synchronized (searchEngines){
+        synchronized (LOCK){
             if (searchEngines.size() >= MAX_ACTIVE_SEARCH_ENGINES){
                 removeOldestSearchEngine();
             }
