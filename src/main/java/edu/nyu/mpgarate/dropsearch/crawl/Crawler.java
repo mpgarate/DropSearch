@@ -7,7 +7,7 @@ import edu.nyu.mpgarate.dropsearch.util.IOUtil;
 import edu.nyu.mpgarate.dropsearch.util.listener.CrawlerListener;
 
 import java.io.IOException;
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -16,12 +16,12 @@ import java.util.logging.Logger;
  */
 public class Crawler {
     private final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
-    private final URL startUrl;
+    private final URI startUrl;
     private final SynchronizedKeywordIndex index;
     private final List<CrawlerListener> listeners;
     private final Integer maxCrawlPages;
 
-    public Crawler(URL startUrl, SynchronizedKeywordIndex index){
+    public Crawler(URI startUrl, SynchronizedKeywordIndex index){
         this.startUrl = startUrl;
         this.index = index;
         this.listeners = new LinkedList<CrawlerListener>();
@@ -31,8 +31,8 @@ public class Crawler {
 
 
     public void crawl() {
-        Set<URL> seenUrls = new HashSet<URL>();
-        Queue<URL> urls = new LinkedList<>();
+        Set<URI> seenUrls = new HashSet<URI>();
+        Queue<URI> urls = new LinkedList<>();
 
 
         int pagesVisited = 0;
@@ -42,7 +42,7 @@ public class Crawler {
 
         while (!urls.isEmpty() && pagesVisited < maxCrawlPages){
 
-            URL url = urls.remove();
+            URI url = urls.remove();
 
             LOGGER.info("visiting url: " + url);
 
@@ -62,11 +62,11 @@ public class Crawler {
 
             index.addAll(extractor.keywords(), webPage);
 
-            List<URL> nextUrls = new ArrayList<URL>();
+            List<URI> nextUrls = new ArrayList<URI>();
 
-            // TODO: don't add URLs to queue if there are greater than
+            // TODO: don't add URIs to queue if there are greater than
             // maxCrawlPages - pagesVisited
-            for (URL nextUrl : extractor.nextUrls()){
+            for (URI nextUrl : extractor.nextUrls()){
                 if (!seenUrls.contains(nextUrl)) {
                     seenUrls.add(nextUrl);
                     nextUrls.add(nextUrl);
@@ -86,7 +86,7 @@ public class Crawler {
      * @param url
      * @return the webPage or null if retrieval failed
      */
-    private WebPage getOrFetchWebPage(URL url){
+    private WebPage getOrFetchWebPage(URI url){
         WebPageStore webPageStore = new WebPageStore();
 
         WebPage webPage = webPageStore.get(url, startUrl);
@@ -95,7 +95,7 @@ public class Crawler {
 
         if (null == webPage){
             try {
-                body = IOUtil.getURLAsString(url);
+                body = IOUtil.getURLAsString(url.toURL());
                 if (null == body){
                     LOGGER.info("---- got null body ----");
                     return null;

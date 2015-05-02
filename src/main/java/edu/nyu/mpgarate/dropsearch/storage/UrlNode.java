@@ -3,21 +3,21 @@ package edu.nyu.mpgarate.dropsearch.storage;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.net.URL;
+import java.net.URI;
 
 /**
  * Created by mike on 4/28/15.
  */
 class UrlNode implements Comparable<UrlNode> {
-    private final URL url;
+    private final URI url;
     private final Double pageWeight;
 
-    public UrlNode(URL url, Double pageWeight){
+    public UrlNode(URI url, Double pageWeight){
         this.url = url;
         this.pageWeight = pageWeight;
     }
 
-    public URL getUrl(){
+    public URI getUrl(){
         return url;
     }
 

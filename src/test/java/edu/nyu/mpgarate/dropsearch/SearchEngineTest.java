@@ -2,14 +2,12 @@ package edu.nyu.mpgarate.dropsearch;
 
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -18,9 +16,9 @@ import static org.junit.Assert.assertTrue;
 public class SearchEngineTest {
 
     @Test
-    public void kenRockwellTest() throws MalformedURLException {
-        URL kenRockwellUrl = new URL("http://kenrockwell.com/nikon/d7200.htm");
-        URL d7200Url = new URL("http://kenrockwell.com/nikon/d7200.htm");
+    public void kenRockwellTest() throws URISyntaxException {
+        URI kenRockwellUrl = new URI("http://kenrockwell.com/nikon/d7200.htm");
+        URI d7200Url = new URI("http://kenrockwell.com/nikon/d7200.htm");
 
         SearchEngine ds = SearchEngineFactory.getSearchEngine(kenRockwellUrl);
 
@@ -37,11 +35,11 @@ public class SearchEngineTest {
 
 
     @Test
-    public void albertGallatinTest() throws MalformedURLException {
-        URL albertGallatinURL = new URL("http://en.wikipedia" +
+    public void albertGallatinTest() throws URISyntaxException {
+        URI albertGallatinURI = new URI("http://en.wikipedia" +
                 ".org/wiki/Albert_Gallatin");
         SearchEngine ds = SearchEngineFactory.getSearchEngine
-                (albertGallatinURL);
+                (albertGallatinURI);
 
         ds.startSynchronousCrawl();
 
@@ -60,12 +58,12 @@ public class SearchEngineTest {
         System.out.println(lastResult);
 
         assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
-                .equals(albertGallatinURL)));
+                .equals(albertGallatinURI)));
     }
 
 //    @Test
-//    public void powerPirateTest() throws MalformedURLException {
-//        URL powerPirateUrl = new URL("http://powerpirate.com/");
+//    public void powerPirateTest() throws MalformedURIException {
+//        URI powerPirateUrl = new URI("http://powerpirate.com/");
 //
 //        SearchEngine ds = SearchEngineFactory.getSearchEngine
 //                (powerPirateUrl);

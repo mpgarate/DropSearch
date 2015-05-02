@@ -3,20 +3,20 @@ package edu.nyu.mpgarate.dropsearch.document;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.net.URL;
+import java.net.URI;
 
 /**
  * Created by mike on 4/28/15.
  */
 public class KeywordMatch extends Keyword {
-    private final URL url;
+    private final URI url;
 
-    public KeywordMatch(String term, Double weight, URL url){
+    public KeywordMatch(String term, Double weight, URI url){
         super(term, weight);
         this.url = url;
     }
 
-    public URL getUrl(){
+    public URI getUrl(){
         return url;
     }
 

@@ -3,11 +3,9 @@ package edu.nyu.mpgarate.dropsearch.retrieve;
 import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
-import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -17,22 +15,22 @@ import java.util.logging.Logger;
 public class RetrievalEngine {
     private final Logger LOGGER = Logger.getLogger(RetrievalEngine.class.getName
             ());
-    private final URL startUrl;
+    private final URI startUrl;
     private final SynchronizedKeywordIndex index;
 
-    public RetrievalEngine(URL startUrl, SynchronizedKeywordIndex index){
+    public RetrievalEngine(URI startUrl, SynchronizedKeywordIndex index){
         this.startUrl = startUrl;
         this.index = index;
     }
 
     public List<SearchResult> getWebPages(SearchQuery searchQuery){
-        Map<URL, SearchResult> results = new HashMap<URL, SearchResult>();
+        Map<URI, SearchResult> results = new HashMap<URI, SearchResult>();
 
         for(String term : searchQuery.getTerms()){
             LOGGER.info("looking at matches for term: " + term);
 
             for (KeywordMatch keywordMatch : index.getKeywordMatches(term)){
-                URL url = keywordMatch.getUrl();
+                URI url = keywordMatch.getUrl();
 
                 if (results.containsKey(url)){
                     results.get(url).addKeyword(keywordMatch);

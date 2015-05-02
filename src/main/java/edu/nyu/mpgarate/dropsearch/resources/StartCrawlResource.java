@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import java.net.URL;
+import java.net.URI;
 
 /**
  * Created by mike on 4/20/15.
@@ -21,7 +21,7 @@ public class StartCrawlResource {
     @GET
     @Timed
     public String startCrawl(@QueryParam("url")
-                                 URL url){
+                                 URI url){
 
         SearchEngine searchEngine = SearchEngineFactory.getSearchEngine(url);
 

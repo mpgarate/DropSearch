@@ -9,7 +9,7 @@ import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.List;
 
 public class SearchEngine {
@@ -19,9 +19,9 @@ public class SearchEngine {
     private Boolean started;
     private final Object lock = new Object();
     private Thread crawlThread;
-    private URL startUrl;
+    private URI startUrl;
 
-    SearchEngine(URL startUrl){
+    SearchEngine(URI startUrl){
         if (null == startUrl){
             throw new NullPointerException();
         }

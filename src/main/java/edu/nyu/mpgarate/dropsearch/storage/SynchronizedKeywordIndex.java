@@ -2,10 +2,9 @@ package edu.nyu.mpgarate.dropsearch.storage;
 
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
-import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
@@ -19,14 +18,14 @@ public class SynchronizedKeywordIndex {
     private final ConcurrentHashMap<String, Set<UrlNode>> map = new
             ConcurrentHashMap<>();
 
-    private final Set<URL> allUrls = new HashSet<URL>();
+    private final Set<URI> allUrls = new HashSet<URI>();
 
     public SynchronizedKeywordIndex(){
 
     }
 
     public void addAll(List<Keyword> keywords, WebPage webPage){
-        URL url = webPage.getUrl();
+        URI url = webPage.getUrl();
 
         for(Keyword keyword : keywords){
             String term = keyword.getTerm();
@@ -68,7 +67,7 @@ public class SynchronizedKeywordIndex {
         return matches;
     }
 
-    public List<URL> getAllUrls(){
-        return new ArrayList<URL>(allUrls);
+    public List<URI> getAllUrls(){
+        return new ArrayList<URI>(allUrls);
     }
 }

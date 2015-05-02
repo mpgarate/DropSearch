@@ -1,17 +1,14 @@
 package edu.nyu.mpgarate.dropsearch.storage;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.junit.Test;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
 import org.mongodb.morphia.Morphia;
-import org.mongodb.morphia.query.Query;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -21,12 +18,11 @@ import static org.junit.Assert.assertEquals;
  */
 public class WebPageStoreTest {
     @Test
-    public void webPageSavesTest() throws MalformedURLException,
-            JsonProcessingException {
+    public void webPageSavesTest() throws URISyntaxException {
         WebPageStore webPageStore = new WebPageStore();
 
-        URL url = new URL("http://example.com");
-        URL startUrl = new URL("http://example.com");
+        URI url = new URI("http://example.com");
+        URI startUrl = new URI("http://example.com");
 
         String body = "lorem ipsum dolor sit amet";
 
@@ -41,12 +37,12 @@ public class WebPageStoreTest {
     }
 
     @Test
-    public void testMongoConnection() throws MalformedURLException {
+    public void testMongoConnection() throws URISyntaxException {
         Datastore ds = new Morphia().createDatastore(new MongoClient(),
                 "testdb");
 
-        URL url = new URL("http://example.com");
-        URL startUrl = new URL("http://example.com");
+        URI url = new URI("http://example.com");
+        URI startUrl = new URI("http://example.com");
 
         String body = "lorem ipsum dolor sit amet";
         WebPage webPage = new WebPage(url, body, new Date(), startUrl);

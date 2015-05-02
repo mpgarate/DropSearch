@@ -7,21 +7,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.BreakIterator;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by mike on 4/15/15.
  */
 public class Extractor {
+    private final Logger LOGGER = Logger.getLogger(Extractor.class.getName());
     private final Document jsoupDoc;
     private final String bodyText;
-    private final URL startUrl;
-    private final URL startUrlBase;
+    private final URI startUrl;
+    private final URI startUrlBase;
 
-    private Extractor(String body, URL startUrl) {
+    private Extractor(String body, URI startUrl) {
         this.jsoupDoc = Jsoup.parse(body);
         this.bodyText = jsoupDoc.body().text();
         this.startUrl = startUrl;
@@ -30,7 +32,7 @@ public class Extractor {
         jsoupDoc.setBaseUri(startUrl.toString());
     }
 
-    public static Extractor fromBody(String body, URL startUrl) {
+    public static Extractor fromBody(String body, URI startUrl) {
         return new Extractor(body, startUrl);
     }
 
@@ -85,14 +87,14 @@ public class Extractor {
         return keywords;
     }
 
-    public List<URL> nextUrls() {
-        List<URL> nextUrls = new LinkedList<URL>();
+    public List<URI> nextUrls() {
+        List<URI> nextUrls = new LinkedList<URI>();
         Elements links = jsoupDoc.select("a[href]");
 
         for (Element link : links) {
             String urlStr = link.attr("abs:href");
 
-            URL url = getValidNextUrlOrNull(urlStr);
+            URI url = getValidNextUrlOrNull(urlStr);
 
             if (null != url) {
                 nextUrls.add(url);
@@ -102,7 +104,7 @@ public class Extractor {
         return nextUrls;
     }
 
-    private URL getValidNextUrlOrNull(String urlStr) {
+    private URI getValidNextUrlOrNull(String urlStr) {
         if (urlStr.trim().length() <= 4) {
             return null;
         }
@@ -111,38 +113,45 @@ public class Extractor {
             return null;
         }
 
+        URI url = startUrlBase.resolve(urlStr);
+        URI urlBase = getUrlBase(url);
+
         try {
-            URL url = new URL(startUrlBase, urlStr);
-            URL urlBase = getUrlBase(url);
-
-            if (startUrlBase.equals(urlBase) &&
-                    urlIsNotSamePageAnchor(url) &&
-                    urlIsNotForbiddenType(url)) {
-
-                return url;
-            }
-
-        } catch (MalformedURLException ignoredException) {
+            URI fullUrl = new URI(urlBase.getScheme(), urlBase.getHost(), url
+                    .getPath(), url.getFragment());
+        } catch (URISyntaxException e) {
+            LOGGER.warning("URISyntaxException");
+            LOGGER.warning(e.toString());
+            e.printStackTrace();
         }
+
+
+        if (startUrlBase.equals(urlBase) &&
+                urlIsNotSamePageAnchor(url) &&
+                urlIsNotForbiddenType(url)) {
+
+            return url;
+        }
+
 
         return null;
     }
 
-    private URL getUrlBase(URL url) {
+    private URI getUrlBase(URI url) {
         try {
-            return new URL(url.getProtocol() + "://" + url.getHost());
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("Invalid URL" + url);
+            return new URI(url.getScheme() + "://" + url.getHost());
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid URI" + url);
         }
     }
 
-    private boolean urlIsNotSamePageAnchor(URL url) {
+    private boolean urlIsNotSamePageAnchor(URI url) {
         String trimmedUrl = url.toString().split("#")[0];
 
         return !startUrl.toString().equals(trimmedUrl);
     }
 
-    private boolean urlIsNotForbiddenType(URL url) {
+    private boolean urlIsNotForbiddenType(URI url) {
         Set<String> forbiddenTypes = new HashSet<String>();
         forbiddenTypes.add("jpg");
         forbiddenTypes.add("png");

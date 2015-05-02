@@ -2,12 +2,14 @@ package edu.nyu.mpgarate.dropsearch.document;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Transient;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -34,7 +36,7 @@ public class WebPage {
 
     }
 
-    public WebPage(URL url, String body, Date dateVisited, URL startUrl){
+    public WebPage(URI url, String body, Date dateVisited, URI startUrl){
         this.url = url.toString();
         this.body = body;
         this.dateVisited = new Date(dateVisited.getTime());
@@ -45,21 +47,21 @@ public class WebPage {
         return id;
     }
 
-    public URL getUrl(){
+    public URI getUrl(){
         try {
-            return new URL(url);
-        } catch (MalformedURLException e) {
-            LOGGER.warning("Malformed URL from Mongo. ");
+            return new URI(url);
+        } catch (URISyntaxException e) {
+            LOGGER.warning("Malformed URI from Mongo. ");
             LOGGER.warning(e.toString());
             return null;
         }
     }
 
-    public URL getStartUrl(){
+    public URI getStartUrl(){
         try {
-            return new URL(startUrl);
-        } catch (MalformedURLException e) {
-            LOGGER.warning("Malformed URL from Mongo. ");
+            return new URI(startUrl);
+        } catch (URISyntaxException e) {
+            LOGGER.warning("Malformed URI from Mongo. ");
             LOGGER.warning(e.toString());
             return null;
         }

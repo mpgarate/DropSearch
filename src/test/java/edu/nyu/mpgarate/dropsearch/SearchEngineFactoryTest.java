@@ -3,8 +3,8 @@ package edu.nyu.mpgarate.dropsearch;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -14,11 +14,11 @@ import static org.junit.Assert.assertNull;
  */
 public class SearchEngineFactoryTest {
     @Test
-    public void moreThanThreeEnginesCausesDeletion() throws MalformedURLException {
-        URL url1 = new URL("http://example.com?1");
-        URL url2 = new URL("http://example.com?2");
-        URL url3 = new URL("http://example.com?3");
-        URL url4 = new URL("http://example.com?4");
+    public void moreThanThreeEnginesCausesDeletion() throws URISyntaxException {
+        URI url1 = new URI("http://example.com?1");
+        URI url2 = new URI("http://example.com?2");
+        URI url3 = new URI("http://example.com?3");
+        URI url4 = new URI("http://example.com?4");
 
         SearchEngine se1 = SearchEngineFactory.getSearchEngine(url1);
         SearchEngine se2 = SearchEngineFactory.getSearchEngine(url2);

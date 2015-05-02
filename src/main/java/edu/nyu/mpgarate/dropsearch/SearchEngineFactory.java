@@ -1,6 +1,6 @@
 package edu.nyu.mpgarate.dropsearch;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,13 +12,13 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class SearchEngineFactory {
     private final static int MAX_ACTIVE_SEARCH_ENGINES = 3;
 
-    private final static Map<URL, SearchEngine> searchEngines =
+    private final static Map<URI, SearchEngine> searchEngines =
             new ConcurrentHashMap<>();
 
-    private final static Queue<URL> searchEngineQueue = new
+    private final static Queue<URI> searchEngineQueue = new
             ConcurrentLinkedDeque<>();
 
-    public static SearchEngine getSearchEngine(URL url){
+    public static SearchEngine getSearchEngine(URI url){
         if (null == url){
             throw new IllegalArgumentException("url must not be empty.");
         }

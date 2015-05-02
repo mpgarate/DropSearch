@@ -15,7 +15,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URL;
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class SearchResource {
     @GET
     @Timed
     public Response search(@QueryParam("url")
-                                   URL url, @QueryParam("q") String query){
+                                   URI url, @QueryParam("q") String query){
 
         SearchEngine searchEngine = SearchEngineFactory.getSearchEngine(url);
 

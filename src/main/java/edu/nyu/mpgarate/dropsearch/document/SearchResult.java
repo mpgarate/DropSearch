@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,9 +16,9 @@ public class SearchResult implements Comparable<SearchResult> {
     private final SearchQuery searchQuery;
     private Double relevanceScore;
     private final Set<Keyword> matchedKeywords;
-    private final URL url;
+    private final URI url;
 
-    public SearchResult(URL url, SearchQuery searchQuery){
+    public SearchResult(URI url, SearchQuery searchQuery){
         this.url = url;
         this.searchQuery = searchQuery;
         this.matchedKeywords = new HashSet<Keyword>();
@@ -29,7 +29,7 @@ public class SearchResult implements Comparable<SearchResult> {
         return relevanceScore;
     }
 
-    public URL getUrl(){
+    public URI getUrl(){
         return url;
     }
 

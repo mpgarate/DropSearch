@@ -9,7 +9,7 @@ import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -19,26 +19,26 @@ import java.util.stream.Stream;
  * Created by mike on 4/28/15.
  */
 public class PageRanker {
-    private final DirectedGraph<URL, Integer> graph = new
-            DirectedSparseGraph<URL, Integer>();
+    private final DirectedGraph<URI, Integer> graph = new
+            DirectedSparseGraph<URI, Integer>();
 
     private final Logger LOGGER = Logger.getLogger(PageRanker.class.getName());
 
-    public PageRanker(SynchronizedKeywordIndex index, URL startUrl){
+    public PageRanker(SynchronizedKeywordIndex index, URI startUrl){
         LOGGER.info("constructing pageRanker");
         Integer currentEdge = 0;
 
         WebPageStore webPageStore = new WebPageStore();
 
-        Set<URL> allUrls = new HashSet<URL>(index.getAllUrls());
+        Set<URI> allUrls = new HashSet<URI>(index.getAllUrls());
 
         LOGGER.info("starting to add urls");
-        for (URL url : allUrls){
+        for (URI url : allUrls){
             WebPage webPage = webPageStore.get(url, startUrl);
 
             Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
 
-            for (URL nextUrl : extractor.nextUrls()) {
+            for (URI nextUrl : extractor.nextUrls()) {
                 if (allUrls.contains(nextUrl)) {
                     graph.addEdge(currentEdge, url, nextUrl);
                     currentEdge++;
@@ -55,19 +55,19 @@ public class PageRanker {
      */
     public void evaluate(){
         LOGGER.info("begin evaluate");
-        PageRank<URL, Integer> pageRank = new PageRank<URL, Integer>(graph, 0.85);
+        PageRank<URI, Integer> pageRank = new PageRank<URI, Integer>(graph, 0.85);
         LOGGER.info("begin pageRank.evaluate()");
         pageRank.evaluate();
         LOGGER.info("eng pageRank.evaluate()");
 
-        Map<URL, Double> results = new HashMap<URL, Double>();
-        for (URL v : graph.getVertices()) {
+        Map<URI, Double> results = new HashMap<URI, Double>();
+        for (URI v : graph.getVertices()) {
             results.put(v, pageRank.getVertexScore(v));
         }
 
         LOGGER.info("got results");
 
-        Map<URL, Double> resultStream = results.entrySet()
+        Map<URI, Double> resultStream = results.entrySet()
                 .stream()
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .limit(10)
@@ -75,7 +75,7 @@ public class PageRanker {
 
         LOGGER.info("sorted results");
 
-        for (URL url : resultStream.keySet()){
+        for (URI url : resultStream.keySet()){
             LOGGER.info(url.toString());
             LOGGER.info(resultStream.get(url).toString());
         }

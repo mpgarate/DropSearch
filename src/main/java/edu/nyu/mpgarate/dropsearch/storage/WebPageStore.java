@@ -5,7 +5,7 @@ import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.logging.Logger;
 
 /**
@@ -41,7 +41,7 @@ public class WebPageStore {
         }
     }
 
-    public WebPage get(URL url, URL startUrl){
+    public WebPage get(URI url, URI startUrl){
         if (null == url || startUrl == null){
             throw new NullPointerException();
         }
@@ -50,7 +50,7 @@ public class WebPageStore {
                 url.toString()).filter("startUrl", startUrl.toString()).get();
     }
 
-    public void deleteAllEngineUrls(URL startUrl){
+    public void deleteAllEngineUrls(URI startUrl){
         if (null == startUrl){
             throw new NullPointerException();
         }
