@@ -111,7 +111,7 @@ public class Crawler {
             LOGGER.info(url.toString());
             webPage = new WebPage(url, body, new Date());
 
-            webPageStore.set(url, webPage);
+            webPageStore.save(webPage);
         } else {
 //            LOGGER.info("---- grabbed doc from database ----");
         }

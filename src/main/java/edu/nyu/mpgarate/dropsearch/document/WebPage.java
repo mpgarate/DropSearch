@@ -3,15 +3,28 @@ package edu.nyu.mpgarate.dropsearch.document;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.*;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.logging.Logger;
 
 /**
  * Created by mike on 4/14/15.
  */
+
+@Entity
 public class WebPage {
-    private URL url;
+    @Transient
+    private final Logger LOGGER = Logger.getLogger(WebPage.class.getName());
+
+    @Id
+    private ObjectId id;
+
+    @Indexed(unique = true, dropDups=true)
+    private String url;
     private String body;
     private Date dateVisited;
 
@@ -20,22 +33,27 @@ public class WebPage {
     }
 
     public WebPage(URL url, String body, Date dateVisited){
-        this.url = url;
+        setUrl(url);
         this.body = body;
         this.dateVisited = dateVisited;
     }
 
-    private WebPage(URL url, String body, Date dateVisited, Document
-            mongoDocument){
-        this(url, body, dateVisited);
+    public ObjectId getId(){
+        return id;
     }
 
     public URL getUrl(){
-        return url;
+        try {
+            return new URL(url);
+        } catch (MalformedURLException e) {
+            LOGGER.warning("Malformed URL from Mongo. ");
+            LOGGER.warning(e.toString());
+            return null;
+        }
     }
 
-    private void setURl(URL url){
-        this.url = url;
+    private void setUrl(URL url){
+        this.url = url.toString();
     }
 
     public String getBody(){
