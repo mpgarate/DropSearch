@@ -9,8 +9,8 @@ import java.net.URL;
  * Created by mike on 4/28/15.
  */
 class UrlNode implements Comparable<UrlNode> {
-    private URL url;
-    private Double pageWeight;
+    private final URL url;
+    private final Double pageWeight;
 
     public UrlNode(URL url, Double pageWeight){
         this.url = url;

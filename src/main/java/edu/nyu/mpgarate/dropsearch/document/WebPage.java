@@ -37,7 +37,7 @@ public class WebPage {
     public WebPage(URL url, String body, Date dateVisited, URL startUrl){
         this.url = url.toString();
         this.body = body;
-        this.dateVisited = dateVisited;
+        this.dateVisited = new Date(dateVisited.getTime());
         this.startUrl = startUrl.toString();
     }
 

@@ -16,12 +16,12 @@ public class WebPageStore {
             ());
     private final static Object LOCK = new Object();
 
-    private Datastore ds = MorphiaSingleton.getInstance();
+    private final Datastore ds = MorphiaSingleton.getInstance();
 
 
-    public WebPageStore(){
+    public WebPageStore() {
 
-    };
+    }
 
     public void save(WebPage webPage){
         if (null == webPage){
@@ -46,10 +46,8 @@ public class WebPageStore {
             throw new NullPointerException();
         }
 
-        WebPage webPage = ds.find(WebPage.class, "url",
+        return ds.find(WebPage.class, "url",
                 url.toString()).filter("startUrl", startUrl.toString()).get();
-
-        return webPage;
     }
 
     public void deleteAllEngineUrls(URL startUrl){

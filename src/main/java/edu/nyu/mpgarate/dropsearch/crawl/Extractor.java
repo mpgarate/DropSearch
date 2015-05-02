@@ -16,10 +16,10 @@ import java.util.*;
  * Created by mike on 4/15/15.
  */
 public class Extractor {
-    private Document jsoupDoc;
-    private String bodyText;
-    private URL startUrl;
-    private URL startUrlBase;
+    private final Document jsoupDoc;
+    private final String bodyText;
+    private final URL startUrl;
+    private final URL startUrlBase;
 
     private Extractor(String body, URL startUrl) {
         this.jsoupDoc = Jsoup.parse(body);

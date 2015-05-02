@@ -15,9 +15,10 @@ import java.util.logging.Logger;
  * Created by mike on 4/14/15.
  */
 public class RetrievalEngine {
-    private Logger LOGGER = Logger.getLogger(RetrievalEngine.class.getName());
-    private URL startUrl;
-    private SynchronizedKeywordIndex index;
+    private final Logger LOGGER = Logger.getLogger(RetrievalEngine.class.getName
+            ());
+    private final URL startUrl;
+    private final SynchronizedKeywordIndex index;
 
     public RetrievalEngine(URL startUrl, SynchronizedKeywordIndex index){
         this.startUrl = startUrl;
@@ -27,20 +28,15 @@ public class RetrievalEngine {
     public List<SearchResult> getWebPages(SearchQuery searchQuery){
         Map<URL, SearchResult> results = new HashMap<URL, SearchResult>();
 
-        WebPageStore webPageStore = new WebPageStore();
-
         for(String term : searchQuery.getTerms()){
-            List<KeywordMatch> keywordMatches = index.getKeywordMatches(term);
-
             LOGGER.info("looking at matches for term: " + term);
 
-            for (KeywordMatch keywordMatch: keywordMatches){
+            for (KeywordMatch keywordMatch : index.getKeywordMatches(term)){
                 URL url = keywordMatch.getUrl();
 
                 if (results.containsKey(url)){
                     results.get(url).addKeyword(keywordMatch);
                 } else {
-//                    WebPage webPage = webPageStore.get(url);
                     SearchResult searchResult = new SearchResult(url,
                             searchQuery);
                     searchResult.addKeyword(keywordMatch);

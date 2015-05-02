@@ -13,10 +13,10 @@ import java.util.Set;
  */
 
 public class SearchResult implements Comparable<SearchResult> {
-    private SearchQuery searchQuery;
+    private final SearchQuery searchQuery;
     private Double relevanceScore;
-    private Set<Keyword> matchedKeywords;
-    private URL url;
+    private final Set<Keyword> matchedKeywords;
+    private final URL url;
 
     public SearchResult(URL url, SearchQuery searchQuery){
         this.url = url;
@@ -85,7 +85,7 @@ public class SearchResult implements Comparable<SearchResult> {
 
     @Override
     public boolean equals(Object obj){
-        if (!(obj instanceof WebPage)) {
+        if (!(obj instanceof SearchResult)) {
             return false;
         }
 

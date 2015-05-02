@@ -14,12 +14,12 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * Created by mike on 4/14/15.
  */
 public class SynchronizedKeywordIndex {
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
-    private ConcurrentHashMap<String, Set<UrlNode>> map = new
+    private final ConcurrentHashMap<String, Set<UrlNode>> map = new
             ConcurrentHashMap<>();
 
-    private Set<URL> allUrls = new HashSet<URL>();
+    private final Set<URL> allUrls = new HashSet<URL>();
 
     public SynchronizedKeywordIndex(){
 

@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
  * Created by mike on 4/27/15.
  */
 public class SearchQuery {
-    private String inputString;
-    private List<String> terms;
+    private final String inputString;
+    private final List<String> terms;
 
     private SearchQuery(String inputString){
         this.inputString = inputString;

@@ -17,9 +17,8 @@ public class SearchEngine {
     private SynchronizedKeywordIndex index;
     private RetrievalEngine retrievalEngine;
     private Boolean started;
-    private Object lock = new Object();
+    private final Object lock = new Object();
     private Thread crawlThread;
-    private Runnable crawlRunnable;
     private URL startUrl;
 
     SearchEngine(URL startUrl){
@@ -54,7 +53,7 @@ public class SearchEngine {
             started = true;
         }
 
-       crawlRunnable = new Runnable(){
+       Runnable runnable = new Runnable(){
             @Override
             public void run() {
                 crawler.crawl();
@@ -62,7 +61,7 @@ public class SearchEngine {
             }
         };
 
-        crawlThread = new Thread(crawlRunnable);
+        crawlThread = new Thread(runnable);
         crawlThread.start();
     }
 
@@ -78,6 +77,7 @@ public class SearchEngine {
         synchronized (lock) {
             if (started && crawlThread != null) {
                 crawlThread.interrupt();
+                started = false;
             }
         }
 

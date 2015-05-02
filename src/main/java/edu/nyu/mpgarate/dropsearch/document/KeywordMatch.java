@@ -9,7 +9,7 @@ import java.net.URL;
  * Created by mike on 4/28/15.
  */
 public class KeywordMatch extends Keyword {
-    private URL url;
+    private final URL url;
 
     public KeywordMatch(String term, Double weight, URL url){
         super(term, weight);

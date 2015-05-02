@@ -19,12 +19,10 @@ import java.util.stream.Stream;
  * Created by mike on 4/28/15.
  */
 public class PageRanker {
-    private DirectedGraph<URL, Integer> graph = new
+    private final DirectedGraph<URL, Integer> graph = new
             DirectedSparseGraph<URL, Integer>();
 
     private final Logger LOGGER = Logger.getLogger(PageRanker.class.getName());
-
-    private  SynchronizedKeywordIndex index;
 
     public PageRanker(SynchronizedKeywordIndex index, URL startUrl){
         LOGGER.info("constructing pageRanker");

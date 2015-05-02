@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  */
 public class Crawler {
     private final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
-    private URL startUrl;
-    private SynchronizedKeywordIndex index;
-    private List<CrawlerListener> listeners;
+    private final URL startUrl;
+    private final SynchronizedKeywordIndex index;
+    private final List<CrawlerListener> listeners;
     private final Integer maxCrawlPages;
 
     public Crawler(URL startUrl, SynchronizedKeywordIndex index){
