@@ -68,8 +68,6 @@ public class SearchEngine {
     public List<SearchResult> search(SearchQuery query){
         List<SearchResult> searchResults = retrievalEngine.getWebPages(query);
 
-        new PageRanker(index, startUrl).evaluate();
-
         return searchResults;
     }
 

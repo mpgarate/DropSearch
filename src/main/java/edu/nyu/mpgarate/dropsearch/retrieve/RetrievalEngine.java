@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
+import edu.nyu.mpgarate.dropsearch.algorithm.PageRanker;
 import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
@@ -46,6 +47,9 @@ public class RetrievalEngine {
 
         List<SearchResult> resultsCollection = new ArrayList<SearchResult>
                 (results.values());
+
+
+        new PageRanker(index, startUrl).evaluate();
 
         LOGGER.info("sorting retrieved results");
 

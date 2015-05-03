@@ -55,7 +55,7 @@ public class PageRanker {
      */
     public void evaluate(){
         LOGGER.info("begin evaluate");
-        PageRank<URI, Integer> pageRank = new PageRank<URI, Integer>(graph, 0.85);
+        PageRank<URI, Integer> pageRank = new PageRank<URI, Integer>(graph, 0.15);
         LOGGER.info("begin pageRank.evaluate()");
         pageRank.evaluate();
         LOGGER.info("eng pageRank.evaluate()");
