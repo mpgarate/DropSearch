@@ -1,7 +1,6 @@
-package edu.nyu.mpgarate.dropsearch.algorithm;
+package edu.nyu.mpgarate.dropsearch.algorithm.pagerank;
 
 import edu.nyu.mpgarate.dropsearch.crawl.Extractor;
-import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
@@ -12,8 +11,6 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import java.net.URI;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by mike on 4/28/15.
@@ -25,21 +22,21 @@ public class PageRanker {
     private final Logger LOGGER = Logger.getLogger(PageRanker.class.getName());
     private PageRank<URI, Integer> pageRank;
     private final Object lock = new Object();
+    private Set<URI> allUrls;
 
-    public PageRanker(SynchronizedKeywordIndex index, URI startUrl){
+    PageRanker(SynchronizedKeywordIndex index, URI startUrl){
         this.index = index;
         this.startUrl = startUrl;
     }
 
-    public void update(){
+    void update(){
         LOGGER.info("updating pageRanker");
         WebPageStore webPageStore = new WebPageStore();
-
-        List<URI> allUrls = index.getAllUrls();
 
         Integer currentEdge = 0;
 
         synchronized (lock) {
+            allUrls = new HashSet(index.getAllUrls());
             graph = new DirectedSparseGraph<>();
 
             LOGGER.info("starting to add urls");
@@ -64,7 +61,7 @@ public class PageRanker {
     /**
      * https://github.com/castagna/mr-pagerank/blob/master/src/main/java/com/talis/labs/pagerank/jung/JungPageRank.java
      */
-    public void evaluate(){
+    void evaluate(){
         LOGGER.info("begin evaluate");
 
         synchronized (lock) {
@@ -79,14 +76,19 @@ public class PageRanker {
     }
 
     public Double getScore(URI url){
-        synchronized (lock) {
-            if (null == pageRank) {
-                LOGGER.info("pageRank is null!");
-                return 1.0;
+        if (null != pageRank) {
+            if (allUrls.contains(url)) {
+                synchronized (lock) {
+                    return pageRank.getVertexScore(url);
+                }
             }
 
-            return pageRank.getVertexScore(url);
+            return 0.0;
+        } else {
+            LOGGER.info("uninitialized pageRanker");
         }
+
+        return 1.0;
     }
 
 }

@@ -30,7 +30,7 @@ public class Crawler {
         this.index = index;
         this.searchEngine = searchEngine;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.maxCrawlPages = 500;
+        this.maxCrawlPages = 5000;
     }
 
     public void crawl() {

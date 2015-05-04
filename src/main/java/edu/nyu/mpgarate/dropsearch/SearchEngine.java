@@ -1,6 +1,6 @@
 package edu.nyu.mpgarate.dropsearch;
 
-import edu.nyu.mpgarate.dropsearch.algorithm.PageRanker;
+import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
 import edu.nyu.mpgarate.dropsearch.crawl.Crawler;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
@@ -20,7 +20,7 @@ public class SearchEngine {
     private final Object lock = new Object();
     private Thread crawlThread;
     private URI startUrl;
-    private PageRanker pageRanker;
+    private PageRankerManager pageRankerManager;
 
     SearchEngine(URI startUrl){
         if (null == startUrl){
@@ -30,12 +30,9 @@ public class SearchEngine {
         this.index = new SynchronizedKeywordIndex();
         this.crawler = new Crawler(startUrl, index, this);
         this.started = false;
-        this.pageRanker = new PageRanker(index, startUrl);
-        this.retrievalEngine = new RetrievalEngine(startUrl, index, pageRanker);
-    }
-
-    public PageRanker getPageRanker(){
-        return pageRanker;
+        this.pageRankerManager = new PageRankerManager(index, startUrl);
+        this.retrievalEngine = new RetrievalEngine(startUrl, index,
+                pageRankerManager);
     }
 
     public SynchronizedKeywordIndex getIndex(){
@@ -93,8 +90,7 @@ public class SearchEngine {
     }
 
     public void updatePageRank(){
-        pageRanker.update();
-        pageRanker.evaluate();
+        pageRankerManager.asyncPrepareNext();
     }
 
     public void addListener(DropSearchListener listener) {

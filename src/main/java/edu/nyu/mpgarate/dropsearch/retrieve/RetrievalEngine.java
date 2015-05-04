@@ -1,7 +1,8 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
-import edu.nyu.mpgarate.dropsearch.algorithm.PageRanker;
+import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRanker;
 import edu.nyu.mpgarate.dropsearch.algorithm.SearchResultRelevanceCalc;
+import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
 import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
@@ -19,17 +20,20 @@ public class RetrievalEngine {
             ());
     private final URI startUrl;
     private final SynchronizedKeywordIndex index;
-    private final SearchResultRelevanceCalc relevanceCalc;
+    private final PageRankerManager pageRankerManager;
 
     public RetrievalEngine(URI startUrl, SynchronizedKeywordIndex index,
-                           PageRanker pageRanker){
+                           PageRankerManager pageRankerManager){
         this.startUrl = startUrl;
         this.index = index;
-        this.relevanceCalc = new SearchResultRelevanceCalc(pageRanker);
+        this.pageRankerManager = pageRankerManager;
     }
 
     public List<SearchResult> getWebPages(SearchQuery searchQuery){
         Map<URI, SearchResult> results = new HashMap<URI, SearchResult>();
+
+        SearchResultRelevanceCalc relevanceCalc = new SearchResultRelevanceCalc
+                    (pageRankerManager.current());
 
         for(String term : searchQuery.getTerms()){
             LOGGER.info("looking at matches for term: " + term);

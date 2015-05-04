@@ -1,10 +1,9 @@
 package edu.nyu.mpgarate.dropsearch.algorithm;
 
+import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRanker;
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 
-import java.net.URI;
 import java.util.logging.Logger;
 
 /**
