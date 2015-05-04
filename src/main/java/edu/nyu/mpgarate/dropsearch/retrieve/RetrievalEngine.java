@@ -1,6 +1,7 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
 import edu.nyu.mpgarate.dropsearch.algorithm.PageRanker;
+import edu.nyu.mpgarate.dropsearch.algorithm.SearchResultRelevanceCalc;
 import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
@@ -18,10 +19,13 @@ public class RetrievalEngine {
             ());
     private final URI startUrl;
     private final SynchronizedKeywordIndex index;
+    private final SearchResultRelevanceCalc relevanceCalc;
 
-    public RetrievalEngine(URI startUrl, SynchronizedKeywordIndex index){
+    public RetrievalEngine(URI startUrl, SynchronizedKeywordIndex index,
+                           PageRanker pageRanker){
         this.startUrl = startUrl;
         this.index = index;
+        this.relevanceCalc = new SearchResultRelevanceCalc(pageRanker);
     }
 
     public List<SearchResult> getWebPages(SearchQuery searchQuery){
@@ -47,6 +51,11 @@ public class RetrievalEngine {
 
         List<SearchResult> resultsCollection = new ArrayList<SearchResult>
                 (results.values());
+
+        for (SearchResult searchResult : resultsCollection){
+            Double score = relevanceCalc.getRelevanceScore(searchResult);
+            searchResult.setRelevanceScore(score);
+        }
 
         LOGGER.info("sorting retrieved results");
 

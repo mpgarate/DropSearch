@@ -5,7 +5,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,15 +24,23 @@ public class SearchResult implements Comparable<SearchResult> {
         this.url = url;
         this.searchQuery = searchQuery;
         this.matchedKeywords = new HashSet<Keyword>();
-        updateRelevanceScore();
+        this.relevanceScore = -1.0;
     }
 
     public Double getRelevanceScore() {
         return relevanceScore;
     }
 
+    public void setRelevanceScore(Double relevanceScore){
+        this.relevanceScore = relevanceScore;
+    }
+
     public URI getUrl(){
         return url;
+    }
+
+    public List<Keyword> getMatchedKeywords(){
+        return new ArrayList(matchedKeywords);
     }
 
     private void updateRelevanceScore(){
@@ -42,18 +52,11 @@ public class SearchResult implements Comparable<SearchResult> {
         //
         // }
 
-        Double relevanceScore = 0.0;
 
-        for (Keyword kw : matchedKeywords){
-            relevanceScore += kw.getWeight();
-        }
-
-        this.relevanceScore = relevanceScore;
     }
 
     public void addKeyword(Keyword keyword) {
         matchedKeywords.add(keyword);
-        updateRelevanceScore();
     }
 
     @Override

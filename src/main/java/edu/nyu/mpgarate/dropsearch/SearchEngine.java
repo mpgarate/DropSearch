@@ -29,9 +29,17 @@ public class SearchEngine {
         this.startUrl = startUrl;
         this.index = new SynchronizedKeywordIndex();
         this.crawler = new Crawler(startUrl, index, this);
-        this.retrievalEngine = new RetrievalEngine(startUrl, index);
         this.started = false;
         this.pageRanker = new PageRanker(index, startUrl);
+        this.retrievalEngine = new RetrievalEngine(startUrl, index, pageRanker);
+    }
+
+    public PageRanker getPageRanker(){
+        return pageRanker;
+    }
+
+    public SynchronizedKeywordIndex getIndex(){
+        return index;
     }
 
     public void startSynchronousCrawl(){

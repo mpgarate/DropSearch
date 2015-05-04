@@ -68,6 +68,8 @@ public class SynchronizedKeywordIndex {
     }
 
     public List<URI> getAllUrls(){
-        return new ArrayList<URI>(allUrls);
+        synchronized (lock) {
+            return new ArrayList<URI>(allUrls);
+        }
     }
 }

@@ -21,40 +21,44 @@ import java.util.stream.Stream;
 public class PageRanker {
     private final SynchronizedKeywordIndex index;
     private final URI startUrl;
-    private final DirectedGraph<URI, Integer> graph;
+    private DirectedGraph<URI, Integer> graph;
     private final Logger LOGGER = Logger.getLogger(PageRanker.class.getName());
-    private Integer currentEdge;
+    private PageRank<URI, Integer> pageRank;
+    private final Object lock = new Object();
 
     public PageRanker(SynchronizedKeywordIndex index, URI startUrl){
         this.index = index;
         this.startUrl = startUrl;
-        this.graph = new DirectedSparseGraph<>();
-        this.currentEdge = 0;
     }
 
     public void update(){
         LOGGER.info("updating pageRanker");
-
         WebPageStore webPageStore = new WebPageStore();
 
         List<URI> allUrls = index.getAllUrls();
 
-        LOGGER.info("starting to add urls");
+        Integer currentEdge = 0;
 
-        for (URI url : allUrls){
-            WebPage webPage = webPageStore.get(url, startUrl);
+        synchronized (lock) {
+            graph = new DirectedSparseGraph<>();
 
-            Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
+            LOGGER.info("starting to add urls");
 
-            for (URI nextUrl : extractor.nextUrls()) {
-                if (allUrls.contains(nextUrl)) {
-                    graph.addEdge(currentEdge, url, nextUrl);
-                    currentEdge++;
+            for (URI url : allUrls) {
+                WebPage webPage = webPageStore.get(url, startUrl);
+
+                Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
+
+                for (URI nextUrl : extractor.nextUrls()) {
+                    if (allUrls.contains(nextUrl)) {
+                        graph.addEdge(currentEdge, url, nextUrl);
+                        currentEdge++;
+                    }
                 }
             }
-        }
 
-        LOGGER.info("done construction.");
+            LOGGER.info("done construction.");
+        }
     }
 
     /**
@@ -62,32 +66,27 @@ public class PageRanker {
      */
     public void evaluate(){
         LOGGER.info("begin evaluate");
-        PageRank<URI, Integer> pageRank = new PageRank<URI, Integer>(graph, 0.15);
-        LOGGER.info("begin pageRank.evaluate()");
-        pageRank.evaluate();
-        LOGGER.info("eng pageRank.evaluate()");
 
-        Map<URI, Double> results = new HashMap<URI, Double>();
-        for (URI v : graph.getVertices()) {
-            results.put(v, pageRank.getVertexScore(v));
-        }
+        synchronized (lock) {
+            pageRank = new PageRank<URI, Integer>(graph, 0.15);
 
-        LOGGER.info("got results");
+            LOGGER.info("begin pageRank.evaluate()");
 
-        Map<URI, Double> resultStream = results.entrySet()
-                .stream()
-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                .limit(10)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            pageRank.evaluate();
 
-        LOGGER.info("sorted results");
-
-        for (URI url : resultStream.keySet()){
-            LOGGER.info(url.toString());
-            LOGGER.info(resultStream.get(url).toString());
+            LOGGER.info("eng pageRank.evaluate()");
         }
     }
 
+    public Double getScore(URI url){
+        synchronized (lock) {
+            if (null == pageRank) {
+                LOGGER.info("pageRank is null!");
+                return 1.0;
+            }
 
+            return pageRank.getVertexScore(url);
+        }
+    }
 
 }
