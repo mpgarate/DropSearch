@@ -3,6 +3,7 @@ package edu.nyu.mpgarate.dropsearch.storage;
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
+import org.bson.types.ObjectId;
 
 import java.net.URI;
 import java.util.*;
@@ -19,18 +20,24 @@ public class SynchronizedKeywordIndex {
             ConcurrentHashMap<>();
 
     private final Set<URI> allUrls = new HashSet<URI>();
+    private final SynchronizedUriMap uriMap;
 
-    public SynchronizedKeywordIndex(){
-
+    public SynchronizedKeywordIndex(SynchronizedUriMap uriMap){
+        this.uriMap = uriMap;
     }
 
     public void addAll(List<Keyword> keywords, WebPage webPage){
         URI url = webPage.getUrl();
 
+        if (null == uriMap.getId(url)){
+            uriMap.putUri(new ObjectId(), url);
+        }
+
         for(Keyword keyword : keywords){
             String term = keyword.getTerm();
 
-            UrlNode urlNode = new UrlNode(url, keyword.getWeight());
+            UrlNode urlNode = new UrlNode(uriMap.getId(url), keyword
+                    .getWeight());
 
             synchronized (lock) {
                 Set<UrlNode> urlNodes = map.get(term);
@@ -60,7 +67,7 @@ public class SynchronizedKeywordIndex {
 
         for (UrlNode urlNode : urlNodes){
             KeywordMatch match = new KeywordMatch(term, urlNode.getPageWeight
-                    (), urlNode.getUrl());
+                    (), urlNode.getUrlId());
             matches.add(match);
         }
 

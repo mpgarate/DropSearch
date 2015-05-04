@@ -6,6 +6,7 @@ import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
+import edu.nyu.mpgarate.dropsearch.storage.SynchronizedUriMap;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class SearchEngine {
     private Crawler crawler;
     private SynchronizedKeywordIndex index;
+    private SynchronizedUriMap uriMap;
     private RetrievalEngine retrievalEngine;
     private Boolean started;
     private final Object lock = new Object();
@@ -26,13 +28,18 @@ public class SearchEngine {
         if (null == startUrl){
             throw new NullPointerException();
         }
+        this.uriMap = new SynchronizedUriMap();
         this.startUrl = startUrl;
-        this.index = new SynchronizedKeywordIndex();
+        this.index = new SynchronizedKeywordIndex(uriMap);
         this.crawler = new Crawler(startUrl, index, this);
         this.started = false;
         this.pageRankerManager = new PageRankerManager(index, startUrl);
         this.retrievalEngine = new RetrievalEngine(startUrl, index,
-                pageRankerManager);
+                pageRankerManager, uriMap);
+    }
+
+    public SynchronizedUriMap getUriMap(){
+        return uriMap;
     }
 
     public SynchronizedKeywordIndex getIndex(){

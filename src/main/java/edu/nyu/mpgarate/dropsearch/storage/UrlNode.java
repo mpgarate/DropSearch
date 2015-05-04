@@ -2,6 +2,7 @@ package edu.nyu.mpgarate.dropsearch.storage;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.bson.types.ObjectId;
 
 import java.net.URI;
 
@@ -9,16 +10,16 @@ import java.net.URI;
  * Created by mike on 4/28/15.
  */
 class UrlNode implements Comparable<UrlNode> {
-    private final URI url;
+    private final ObjectId urlId;
     private final Double pageWeight;
 
-    public UrlNode(URI url, Double pageWeight){
-        this.url = url;
+    public UrlNode(ObjectId urlId, Double pageWeight){
+        this.urlId = urlId;
         this.pageWeight = pageWeight;
     }
 
-    public URI getUrl(){
-        return url;
+    public ObjectId getUrlId(){
+        return urlId;
     }
 
     public Double getPageWeight(){
@@ -28,7 +29,7 @@ class UrlNode implements Comparable<UrlNode> {
     @Override
     public int hashCode(){
         return new HashCodeBuilder(59, 23)
-                .append(url)
+                .append(urlId)
                 .toHashCode();
     }
 
@@ -45,7 +46,7 @@ class UrlNode implements Comparable<UrlNode> {
         UrlNode un = (UrlNode) obj;
 
         return new EqualsBuilder()
-                .append(url, un.url)
+                .append(urlId, un.urlId)
                 .isEquals();
     }
 
@@ -53,8 +54,8 @@ class UrlNode implements Comparable<UrlNode> {
     public String toString(){
         return new StringBuilder()
                 .append("UrlNode {")
-                .append("url: ")
-                .append(url.toString())
+                .append("urlId: ")
+                .append(urlId.toString())
                 .append(", pageWeight: ")
                 .append(pageWeight)
                 .append(" }")
@@ -63,7 +64,6 @@ class UrlNode implements Comparable<UrlNode> {
 
     @Override
     public int compareTo(UrlNode otherUrlNode) {
-        return pageWeight.compareTo(otherUrlNode.getPageWeight()) + url
-                .toString().compareTo(otherUrlNode.getUrl().toString());
+        return pageWeight.compareTo(otherUrlNode.getPageWeight());
     }
 }
