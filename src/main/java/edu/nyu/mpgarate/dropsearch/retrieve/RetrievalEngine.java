@@ -2,13 +2,12 @@ package edu.nyu.mpgarate.dropsearch.retrieve;
 
 import edu.nyu.mpgarate.dropsearch.algorithm.SearchResultRelevanceCalc;
 import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
-import edu.nyu.mpgarate.dropsearch.document.Keyword;
-import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
-import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
-import edu.nyu.mpgarate.dropsearch.document.SearchResult;
+import edu.nyu.mpgarate.dropsearch.crawl.Extractor;
+import edu.nyu.mpgarate.dropsearch.document.*;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedUriMap;
 import edu.nyu.mpgarate.dropsearch.storage.UrlNode;
+import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import org.bson.types.ObjectId;
 
 import javax.validation.constraints.Null;
@@ -161,10 +160,25 @@ public class RetrievalEngine {
 
         LOGGER.info("done sorting retrieved results");
 
-        if (results.size() < 25){
-            return results;
-        } else {
-            return results.subList(0, 25);
+        if (results.size() >= 25){
+            results = results.subList(0, 25);
+        }
+
+        insertPageTitles(results);
+
+        return results;
+    }
+
+    private void insertPageTitles(List<SearchResult> results) {
+        WebPageStore webPageStore = new WebPageStore();
+
+        for (SearchResult searchResult: results){
+            URI pageUrl = searchResult.getUrl();
+            WebPage webPage = webPageStore.get(pageUrl, startUrl);
+
+            Extractor extractor = Extractor.fromBody(webPage.getBody(), startUrl);
+
+            searchResult.setTitle(extractor.title());
         }
     }
 }

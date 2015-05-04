@@ -36,13 +36,13 @@ public class SearchResultRelevanceCalc {
 
         List<Keyword> keywords = searchResult.getMatchedKeywords();
 
-        relevanceScore *= getKeywordsScore(keywords) * 0.9;
+        relevanceScore *= getKeywordsScore(keywords) * 0.6;
 
         Double pageRankScore = pageRanker.getScore(searchResult.getUrl());
 
         // since this pagrRanker may not be complete, we boost the scores so
         // that scores of 0 do not eliminate a page from consideration.
-        relevanceScore *= (pageRankScore + 0.1) * 0.1;
+        relevanceScore *= (pageRankScore + 0.1) * 0.4;
 
         LOGGER.info("pageRank: " + searchResult
                         .getUrl() + " : " + pageRankScore);

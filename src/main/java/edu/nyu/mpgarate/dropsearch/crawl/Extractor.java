@@ -59,6 +59,9 @@ public class Extractor {
         return new Extractor(body, startUrl);
     }
 
+    public String title(){
+        return jsoupDoc.title();
+    }
 
     private List<String> extractTitleTermsFromBody(){
         List<String> titleTerms = new ArrayList<>();
@@ -185,7 +188,14 @@ public class Extractor {
             return null;
         }
 
-        URI url = startUrlBase.resolve(urlStr);
+        URI url;
+        try {
+            url = startUrlBase.resolve(urlStr);
+        } catch (IllegalArgumentException e){
+            LOGGER.warning("Could not create url: " + urlStr);
+            return null;
+        }
+
         URI urlBase = getUrlBase(url);
 
         if (startUrlBase.equals(urlBase) &&

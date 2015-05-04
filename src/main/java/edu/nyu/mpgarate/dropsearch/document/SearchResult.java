@@ -19,12 +19,21 @@ public class SearchResult implements Comparable<SearchResult> {
     private Double relevanceScore;
     private final Set<Keyword> matchedKeywords;
     private final URI url;
+    private String title;
 
     public SearchResult(URI url, SearchQuery searchQuery){
         this.url = url;
         this.searchQuery = searchQuery;
         this.matchedKeywords = new HashSet<Keyword>();
         this.relevanceScore = -1.0;
+    }
+
+    public void setTitle(String title){
+        this.title = title;
+    }
+
+    public String getTitle(){
+        return title;
     }
 
     public Double getRelevanceScore() {
