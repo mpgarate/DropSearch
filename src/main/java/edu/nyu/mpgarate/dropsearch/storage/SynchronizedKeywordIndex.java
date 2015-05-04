@@ -53,7 +53,9 @@ public class SynchronizedKeywordIndex {
             }
         }
 
-        allUrls.add(url);
+        synchronized (lock){
+            allUrls.add(url);
+        }
     }
 
     public List<UrlNode> getKeywordMatches(String term){

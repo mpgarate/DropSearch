@@ -1,6 +1,7 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
 import com.google.common.base.CharMatcher;
+import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.algorithm.VectorSpaceImportance;
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import org.jsoup.Jsoup;
@@ -128,7 +129,8 @@ public class Extractor {
         }
 
         Integer titleTermsCount = titleTerms.size();
-        Double titleWeight = 10.0 / titleTermsCount;
+        Double titleWeight = Configuration.getInstance().getTitleWeight() /
+                titleTermsCount;
 
         for (String titleTerm : titleTerms){
             Keyword keyword = keywordMap.get(titleTerm);

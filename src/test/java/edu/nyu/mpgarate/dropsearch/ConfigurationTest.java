@@ -13,7 +13,7 @@ public class ConfigurationTest {
     public void configurationLoadsMaxCrawlPages(){
         Configuration config = Configuration.getInstance();
 
-        assertTrue(config.getMaxCrawlPages().equals(50));
+        assertTrue(config.getMaxCrawlPages().equals(100));
     }
 
 }

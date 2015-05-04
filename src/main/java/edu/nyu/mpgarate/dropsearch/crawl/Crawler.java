@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
+import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.SearchEngine;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
@@ -30,7 +31,7 @@ public class Crawler {
         this.index = index;
         this.searchEngine = searchEngine;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.maxCrawlPages = 50;
+        this.maxCrawlPages = Configuration.getInstance().getMaxCrawlPages();
     }
 
     public void crawl() {
@@ -57,7 +58,9 @@ public class Crawler {
 
             pagesVisited++;
 
-            if (pagesVisited % 100 == 0){
+            if (pagesVisited % Configuration.getInstance()
+                    .getPageRankRefreshRate() ==
+                    0){
                 LOGGER.info("pagesVisited: " + pagesVisited);
                 searchEngine.updatePageRank();
             }

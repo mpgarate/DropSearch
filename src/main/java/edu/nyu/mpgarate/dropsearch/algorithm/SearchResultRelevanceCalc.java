@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.algorithm;
 
+import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRanker;
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
@@ -15,8 +16,12 @@ public class SearchResultRelevanceCalc {
             (SearchResultRelevanceCalc.class.getName());
     private PageRanker pageRanker;
 
+    private final Configuration conf;
+
     public SearchResultRelevanceCalc(PageRanker pageRanker){
         this.pageRanker = pageRanker;
+        this.conf = Configuration.getInstance();
+
     }
 
     private Double getKeywordsScore(List<Keyword> keywords){
@@ -36,13 +41,15 @@ public class SearchResultRelevanceCalc {
 
         List<Keyword> keywords = searchResult.getMatchedKeywords();
 
-        relevanceScore *= getKeywordsScore(keywords) * 0.6;
+        relevanceScore *= getKeywordsScore(keywords) * conf
+                .getKeywordsWeight();
 
         Double pageRankScore = pageRanker.getScore(searchResult.getUrl());
 
         // since this pagrRanker may not be complete, we boost the scores so
         // that scores of 0 do not eliminate a page from consideration.
-        relevanceScore *= (pageRankScore + 0.1) * 0.4;
+        relevanceScore *= (pageRankScore + conf.getPageRankOffset()) * conf
+                .getPageRankWeight();
 
         LOGGER.info("pageRank: " + searchResult
                         .getUrl() + " : " + pageRankScore);
