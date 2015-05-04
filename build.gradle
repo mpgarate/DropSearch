@@ -40,6 +40,8 @@ dependencies {
 }
 
 run {
+    minHeapSize = "3g"
+    maxHeapSize = "4g"
     args 'server'
 }
 
