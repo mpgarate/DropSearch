@@ -9,7 +9,7 @@ import java.net.URI;
 /**
  * Created by mike on 4/28/15.
  */
-class UrlNode implements Comparable<UrlNode> {
+public class UrlNode implements Comparable<UrlNode> {
     private final ObjectId urlId;
     private final Double pageWeight;
 

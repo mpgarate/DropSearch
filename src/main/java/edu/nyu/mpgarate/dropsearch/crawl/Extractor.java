@@ -125,7 +125,7 @@ public class Extractor {
         }
 
         Integer titleTermsCount = titleTerms.size();
-        Double titleWeight = 50.0 / titleTerms.size();
+        Double titleWeight = 10.0 / titleTermsCount;
 
         for (String titleTerm : titleTerms){
             Keyword keyword = keywordMap.get(titleTerm);

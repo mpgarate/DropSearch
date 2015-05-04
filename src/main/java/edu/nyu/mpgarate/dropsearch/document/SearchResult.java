@@ -43,18 +43,6 @@ public class SearchResult implements Comparable<SearchResult> {
         return new ArrayList(matchedKeywords);
     }
 
-    private void updateRelevanceScore(){
-
-        //   pageRank() * pageRankWeight
-        // + termRelevance() * termRelevanceWeight
-        // +
-        // def termRelevance(){
-        //
-        // }
-
-
-    }
-
     public void addKeyword(Keyword keyword) {
         matchedKeywords.add(keyword);
     }

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * Created by mike on 4/28/15.
  */
-public class Keyword {
+public class Keyword implements Comparable<Keyword> {
     private final String term;
     private final Double weight;
 
@@ -21,6 +21,12 @@ public class Keyword {
 
     public Double getWeight(){
         return weight;
+    }
+
+    @Override
+    public int compareTo(Keyword otherKeyword){
+        return getWeight()
+                .compareTo(otherKeyword.getWeight());
     }
 
     @Override

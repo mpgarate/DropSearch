@@ -56,22 +56,29 @@ public class SynchronizedKeywordIndex {
         allUrls.add(url);
     }
 
-    public List<KeywordMatch> getKeywordMatches(String term){
+    public List<UrlNode> getKeywordMatches(String term){
         Set<UrlNode> urlNodes = map.get(term);
 
         if (null == urlNodes){
-            return new LinkedList<>();
+            return Collections.emptyList();
         }
 
-        ArrayList<KeywordMatch> matches = new ArrayList<>();
+        List<UrlNode> urlNodeList = Arrays.asList(urlNodes.toArray(new
+                UrlNode[urlNodes.size()]));
 
-        for (UrlNode urlNode : urlNodes){
-            KeywordMatch match = new KeywordMatch(term, urlNode.getPageWeight
-                    (), urlNode.getUrlId());
-            matches.add(match);
-        }
 
-        return matches;
+        return urlNodeList;
+
+
+//        Set<KeywordMatch> matches = new HashSet<>();
+//
+//        for (UrlNode urlNode : urlNodes){
+//            KeywordMatch match = new KeywordMatch(term, urlNode.getPageWeight
+//                    (), urlNode.getUrlId());
+//            matches.add(match);
+//        }
+//
+//        return matches;
     }
 
     public List<URI> getAllUrls(){
