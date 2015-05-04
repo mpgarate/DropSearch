@@ -11,7 +11,7 @@ public class VectorSpaceImportance {
     private final static Logger LOGGER = Logger.getLogger
             (VectorSpaceImportance.class.getName());
 
-    private final static Double MAX_OCCURRENCE_RATE = 0.012;
+    private final static Double MAX_OCCURRENCE_RATE = 10.012;
 
     public static Double of(Integer occCount, Integer docSize){
         Double quotient = (double)occCount / docSize;

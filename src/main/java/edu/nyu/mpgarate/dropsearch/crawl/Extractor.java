@@ -217,9 +217,16 @@ public class Extractor {
         Set<String> forbiddenTypes = new HashSet<String>();
         forbiddenTypes.add("jpg");
         forbiddenTypes.add("png");
+        forbiddenTypes.add("php");
 
         String urlStr = url.toString();
-        String extension = urlStr.substring(urlStr.lastIndexOf('.'));
+
+        Integer extIndex = urlStr.lastIndexOf('.');
+        Integer endIndex = extIndex + 4;
+
+        endIndex = endIndex > urlStr.length() ? urlStr.length() : endIndex;
+
+        String extension = urlStr.substring(extIndex, endIndex);
         extension = extension.toLowerCase().replace(".", "");
 
         return !forbiddenTypes.contains(extension);

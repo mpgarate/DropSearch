@@ -60,6 +60,8 @@ public class ExtractorTest {
                 + "<a href='http://example.com#samepageanchor'>foo</a>"
                 + "<a href='http://example.com'>foo</a>"
                 + "<a href='http://google.com'>foo</a>"
+                + "<a href='http://en.wikipedia.org/w/index" +
+                ".php?title=Albert_Gallatin&action=edit&section=11'>foo</a>"
                 + "</body></html>";
 
         URI startUrl = new URI("http://example.com");
@@ -73,6 +75,7 @@ public class ExtractorTest {
         assertFalse(nextUrls.contains(new URI("http://example.com#samepageanchor")));
         assertFalse(nextUrls.contains(new URI("http://google.com")));
         assertFalse(nextUrls.contains(new URI("http://example.com/image.jpg")));
+        assertFalse(nextUrls.contains(new URI("http://en.wikipedia.org/w/index.php?title=Albert_Gallatin&action=edit&section=11")));
     }
 
     @Test
