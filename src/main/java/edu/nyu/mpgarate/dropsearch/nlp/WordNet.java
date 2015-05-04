@@ -1,5 +1,7 @@
 package edu.nyu.mpgarate.dropsearch.nlp;
 
+import rita.RiMarkov;
+import rita.RiString;
 import rita.RiTa;
 import rita.RiWordNet;
 
@@ -65,7 +67,7 @@ public class WordNet {
         if (relatedWords.isEmpty()){
             for (String pos : PARTS_OF_SPEECH) {
                 relatedWords.addAll(Arrays.asList(riWordNet.getAllMeronyms(term,
-                                pos)));
+                        pos)));
 
                 }
         }

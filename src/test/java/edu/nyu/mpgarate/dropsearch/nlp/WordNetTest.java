@@ -51,7 +51,6 @@ public class WordNetTest {
         assertTrue(relatedWordsContains("steward", "keeper"));
     }
 
-
 //
 //        RiString rs = new RiString(term);
 //        System.out.println(rs.analyze());

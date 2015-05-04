@@ -7,7 +7,6 @@ import edu.nyu.mpgarate.dropsearch.SearchEngine;
 import edu.nyu.mpgarate.dropsearch.SearchEngineFactory;
 import edu.nyu.mpgarate.dropsearch.document.SearchQuery;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
-import edu.nyu.mpgarate.dropsearch.document.WebPage;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -16,9 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by mike on 4/21/15.
@@ -30,7 +27,7 @@ public class SearchResource {
     @GET
     @Timed
     public Response search(@QueryParam("url")
-                                   URI url, @QueryParam("q") String query){
+                               URI url, @QueryParam("q") String query){
 
         SearchEngine searchEngine = SearchEngineFactory.getSearchEngine(url);
 
@@ -39,13 +36,12 @@ public class SearchResource {
 
         System.out.println(results);
 
-        List resultUrls = results.stream().map(sr -> new Object[] {sr.getUrl
-                (), sr.getRelevanceScore()}).collect
-                (Collectors.toList());
-
+//        List resultUrls = results.stream().map(sr -> new Object[] {sr.getUrl
+//                (), sr.getRelevanceScore()}).collect
+//                (Collectors.toList());
 
         try {
-            String resp = new ObjectMapper().writeValueAsString(resultUrls);
+            String resp = new ObjectMapper().writeValueAsString(results);
 
             return Response.ok()
                     .entity(resp)
