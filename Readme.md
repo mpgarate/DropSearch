@@ -24,6 +24,7 @@ sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```sh
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
 ```
+- Install latest mongoDB: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 - Clone this repository
 ```sh
 cd DropSearch
@@ -32,4 +33,7 @@ gradle run
 ```sh
 cd DropSearch/client
 http-server -p 3000
+```
+```sh
+mongod
 ```
