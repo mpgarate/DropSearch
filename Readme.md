@@ -37,3 +37,6 @@ http-server -p 3000
 ```sh
 mongod
 ```
+
+Create swap file:
+https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-12-04
