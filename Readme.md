@@ -18,6 +18,11 @@ sudo apt-get install gradle-2.3
 sudo apt-get install npm
 sudo chown -R $USER /usr/local
 npm install -g http-server
+sudo ln -s /usr/bin/nodejs /usr/bin/node
+```
+- Reroute port 80 to port 3000 for regular user access
+```sh
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
 ```
 - Clone this repository
 ```sh
@@ -26,5 +31,5 @@ gradle run
 ```
 ```sh
 cd DropSearch/client
-http-server
+http-server -p 3000
 ```
