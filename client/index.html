@@ -73,13 +73,13 @@
 
 
     $("#query").keyup(function(){
-      clearTimeout(timer);
 
       var queryVal = $("#query").val();
 
       if (queryVal && queryVal.length > 2){
         currentRequestNumber++;
         var requestNumber = currentRequestNumber;
+        clearTimeout(timer);
         timer = setTimeout(function(){
           getSearchResults(queryVal, requestNumber);
         }, interval);
