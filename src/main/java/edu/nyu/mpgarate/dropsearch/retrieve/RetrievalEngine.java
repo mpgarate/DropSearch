@@ -67,6 +67,10 @@ public class RetrievalEngine {
 
         LOGGER.info("done sorting retrieved results");
 
-        return resultsCollection;
+        if (resultsCollection.size() < 25){
+            return resultsCollection;
+        } else {
+            return resultsCollection.subList(0, 25);
+        }
     }
 }

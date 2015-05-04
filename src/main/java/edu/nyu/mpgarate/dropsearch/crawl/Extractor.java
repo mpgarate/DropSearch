@@ -59,38 +59,45 @@ public class Extractor {
         return new Extractor(body, startUrl);
     }
 
-    /**
-     * Referenced for whitespace treatment:
-     * http://stackoverflow.com/questions/7240190/remove-whitespace-chars-from-string-instance
-     * @return
-     */
-    public List<Keyword> keywords() {
-        // TODO: consider the count for how many times a keyword appears
 
-        List<String> keywordList = new ArrayList<String>();
+    private List<String> extractTitleTermsFromBody(){
+        List<String> titleTerms = new ArrayList<>();
+        String title = jsoupDoc.title();
+
+        for (String s : extractTermsFrom(title)){
+            titleTerms.add(s);
+        }
+
+        return titleTerms;
+    }
+
+    private List<String> extractTermsFrom(String body){
+        List<String> termList = new ArrayList<String>();
 
         BreakIterator boundary = BreakIterator.getWordInstance();
-        boundary.setText(bodyText);
+        boundary.setText(body);
 
         int start = boundary.first();
         for (int end = boundary.next();
              end != BreakIterator.DONE;
              start = end, end = boundary.next()) {
 
-            String keyWord = bodyText.substring(start, end);
+            String keyWord = body.substring(start, end);
             keyWord = CharMatcher.WHITESPACE.removeFrom(keyWord);
             keyWord = keyWord.toLowerCase();
 
             if (keyWord.length() > 2 && !stopwords.contains(keyWord)) {
-                keywordList.add(keyWord);
+                termList.add(keyWord);
             }
         }
 
-        Integer totalKeywords = keywordList.size();
-        
+        return termList;
+    }
+
+    private Map<String, Integer> countTerms(List<String> terms){
         Map<String, Integer> keywordCount = new HashMap<String, Integer>();
 
-        for (String term : keywordList){
+        for (String term : terms){
             Integer prevCount = 0;
 
             if (keywordCount.containsKey(term)){
@@ -100,18 +107,56 @@ public class Extractor {
             keywordCount.put(term, prevCount + 1);
         }
 
-        List<Keyword> keywords = new ArrayList<>();
+        return keywordCount;
+    }
 
-        for(Map.Entry<String, Integer> entry : keywordCount.entrySet()){
+    private List<Keyword> compileKeywords(Map<String, Integer> termCounts,
+                                          Integer totalTerms,
+                                          List<String> titleTerms){
+        Map<String, Keyword> keywordMap = new HashMap<String, Keyword>();
+
+        for(Map.Entry<String, Integer> entry : termCounts.entrySet()){
             Integer occCount = entry.getValue();
             String term = entry.getKey();
 
-            Keyword keyword = new Keyword(term, VectorSpaceImportance.of
-                    (occCount, totalKeywords));
-            keywords.add(keyword);
+            Double weight = VectorSpaceImportance.of(occCount, totalTerms);
+            Keyword keyword = new Keyword(term, weight);
+            keywordMap.put(term, keyword);
         }
 
-        return keywords;
+        Integer titleTermsCount = titleTerms.size();
+        Double titleWeight = 50.0 / titleTerms.size();
+
+        for (String titleTerm : titleTerms){
+            Keyword keyword = keywordMap.get(titleTerm);
+
+            if (null == keyword){
+                keyword = new Keyword(titleTerm, titleWeight);
+            } else {
+                keyword = new Keyword(keyword.getTerm(), keyword.getWeight()
+                        + titleWeight);
+            }
+
+            keywordMap.put(titleTerm, keyword);
+        }
+
+        return new ArrayList<Keyword>(keywordMap.values());
+    }
+    /**
+     * Referenced for whitespace treatment:
+     * http://stackoverflow.com/questions/7240190/remove-whitespace-chars-from-string-instance
+     * @return
+     */
+    public List<Keyword> keywords() {
+
+        List<String> terms = extractTermsFrom(bodyText);
+
+        Integer totalTerms = terms.size();
+
+        Map<String, Integer> termCounts = countTerms(terms);
+
+        List<String> titleTerms = extractTitleTermsFromBody();
+        return compileKeywords(termCounts, totalTerms, titleTerms);
     }
 
     public List<URI> nextUrls() {

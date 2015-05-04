@@ -4,6 +4,7 @@ import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRanker;
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
 import edu.nyu.mpgarate.dropsearch.document.SearchResult;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -18,16 +19,28 @@ public class SearchResultRelevanceCalc {
         this.pageRanker = pageRanker;
     }
 
-    public Double getRelevanceScore(SearchResult searchResult){
-        Double relevanceScore = 0.0;
+    private Double getKeywordsScore(List<Keyword> keywords){
+        Double score = 0.0;
 
-        for (Keyword keyword : searchResult.getMatchedKeywords()){
-            relevanceScore += keyword.getWeight();
+        for (Keyword keyword : keywords){
+            score += keyword.getWeight();
+
+            score = score / keywords.size();
         }
+
+        return score;
+    }
+
+    public Double getRelevanceScore(SearchResult searchResult){
+        Double relevanceScore = 1.0;
+
+        List<Keyword> keywords = searchResult.getMatchedKeywords();
+
+        relevanceScore *= getKeywordsScore(keywords) * 0.65;
 
         Double pageRankScore = pageRanker.getScore(searchResult.getUrl());
 
-        relevanceScore *= pageRankScore;
+        relevanceScore *= pageRankScore * 0.45;
 
         LOGGER.info("relevance " + pageRankScore + " for: " + searchResult
                         .getUrl());

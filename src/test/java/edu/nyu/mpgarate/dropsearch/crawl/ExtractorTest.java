@@ -106,4 +106,27 @@ public class ExtractorTest {
                 .getTerm())));
     }
 
+    private boolean listContainsPair(List<Keyword> keywords, String term, Double
+            value){
+        return keywords.stream().anyMatch(kw -> (kw.getTerm().equals(term) &&
+                kw.getWeight().equals(value)));
+    }
+
+//    @Test
+//    public void testMetaKeywords() throws URISyntaxException {
+//        String body = "<title>France - Wikipedia, the free " +
+//                "encyclopedia</title> the beatles are a great band and their " +
+//                "music is available for free";
+//
+//        URI url = new URI("http://example.com?france");
+//        Extractor e = Extractor.fromBody(body, url);
+//
+//        List<Keyword> keywords = e.keywords();
+//
+//        assertTrue(listContainsPair(keywords, "france", 1.0));
+//        assertTrue(listContainsPair(keywords, "wikipedia", 1.0));
+//        assertTrue(listContainsPair(keywords, "free", 1.1666666666666667));
+//    }
+
+
 }
