@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.crawl;
 
+import edu.nyu.mpgarate.dropsearch.SearchEngine;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
@@ -20,15 +21,17 @@ public class Crawler {
     private final SynchronizedKeywordIndex index;
     private final List<CrawlerListener> listeners;
     private final Integer maxCrawlPages;
+    private final SearchEngine searchEngine;
 
-    public Crawler(URI startUrl, SynchronizedKeywordIndex index){
+
+    public Crawler(URI startUrl, SynchronizedKeywordIndex index, SearchEngine
+            searchEngine){
         this.startUrl = startUrl;
         this.index = index;
+        this.searchEngine = searchEngine;
         this.listeners = new LinkedList<CrawlerListener>();
-        this.maxCrawlPages = 50;
+        this.maxCrawlPages = 500;
     }
-
-
 
     public void crawl() {
         Set<URI> seenUrls = new HashSet<URI>();
@@ -56,6 +59,7 @@ public class Crawler {
 
             if (pagesVisited % 100 == 0){
                 LOGGER.info("pagesVisited: " + pagesVisited);
+                searchEngine.updatePageRank();
             }
 
             Extractor extractor = Extractor.fromBody(webPage.getBody(), url);
@@ -78,6 +82,7 @@ public class Crawler {
             fireVisitedWebPageEvent(webPage);
         }
 
+        searchEngine.updatePageRank();
     }
 
     /**

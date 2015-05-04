@@ -19,20 +19,28 @@ import java.util.stream.Stream;
  * Created by mike on 4/28/15.
  */
 public class PageRanker {
-    private final DirectedGraph<URI, Integer> graph = new
-            DirectedSparseGraph<URI, Integer>();
-
+    private final SynchronizedKeywordIndex index;
+    private final URI startUrl;
+    private final DirectedGraph<URI, Integer> graph;
     private final Logger LOGGER = Logger.getLogger(PageRanker.class.getName());
+    private Integer currentEdge;
 
     public PageRanker(SynchronizedKeywordIndex index, URI startUrl){
-        LOGGER.info("constructing pageRanker");
-        Integer currentEdge = 0;
+        this.index = index;
+        this.startUrl = startUrl;
+        this.graph = new DirectedSparseGraph<>();
+        this.currentEdge = 0;
+    }
+
+    public void update(){
+        LOGGER.info("updating pageRanker");
 
         WebPageStore webPageStore = new WebPageStore();
 
-        Set<URI> allUrls = new HashSet<URI>(index.getAllUrls());
+        List<URI> allUrls = index.getAllUrls();
 
         LOGGER.info("starting to add urls");
+
         for (URI url : allUrls){
             WebPage webPage = webPageStore.get(url, startUrl);
 
@@ -47,7 +55,6 @@ public class PageRanker {
         }
 
         LOGGER.info("done construction.");
-
     }
 
     /**

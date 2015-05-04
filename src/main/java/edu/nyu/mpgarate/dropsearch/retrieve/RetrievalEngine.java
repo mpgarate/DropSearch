@@ -48,9 +48,6 @@ public class RetrievalEngine {
         List<SearchResult> resultsCollection = new ArrayList<SearchResult>
                 (results.values());
 
-
-        new PageRanker(index, startUrl).evaluate();
-
         LOGGER.info("sorting retrieved results");
 
         Collections.sort(resultsCollection, Collections.reverseOrder());

@@ -20,6 +20,7 @@ public class SearchEngine {
     private final Object lock = new Object();
     private Thread crawlThread;
     private URI startUrl;
+    private PageRanker pageRanker;
 
     SearchEngine(URI startUrl){
         if (null == startUrl){
@@ -27,9 +28,10 @@ public class SearchEngine {
         }
         this.startUrl = startUrl;
         this.index = new SynchronizedKeywordIndex();
-        this.crawler = new Crawler(startUrl, index);
+        this.crawler = new Crawler(startUrl, index, this);
         this.retrievalEngine = new RetrievalEngine(startUrl, index);
         this.started = false;
+        this.pageRanker = new PageRanker(index, startUrl);
     }
 
     public void startSynchronousCrawl(){
@@ -80,6 +82,11 @@ public class SearchEngine {
         }
 
         new WebPageStore().deleteAllEngineUrls(startUrl);
+    }
+
+    public void updatePageRank(){
+        pageRanker.update();
+        pageRanker.evaluate();
     }
 
     public void addListener(DropSearchListener listener) {
