@@ -12,8 +12,11 @@ import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 
 import java.net.URI;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class SearchEngine {
+    private final static Logger LOGGER = Logger.getLogger(SearchEngine.class
+            .getName());
     private Crawler crawler;
     private SynchronizedKeywordIndex index;
     private SynchronizedUriMap uriMap;
@@ -23,7 +26,7 @@ public class SearchEngine {
     private Thread crawlThread;
     private URI startUrl;
     private PageRankerManager pageRankerManager;
-    private Integer pagesCrawled;
+    private Boolean doneCrawling;
 
     SearchEngine(URI startUrl){
         if (null == startUrl){
@@ -37,6 +40,7 @@ public class SearchEngine {
         this.pageRankerManager = new PageRankerManager(index, startUrl);
         this.retrievalEngine = new RetrievalEngine(startUrl, index,
                 pageRankerManager, uriMap);
+        this.doneCrawling = false;
     }
 
     public SynchronizedUriMap getUriMap(){
@@ -49,7 +53,7 @@ public class SearchEngine {
 
     public void startSynchronousCrawl(){
         synchronized(lock) {
-            if (started) {
+            if (started || doneCrawling) {
                 return;
             }
             started = true;
@@ -65,7 +69,7 @@ public class SearchEngine {
      */
     public boolean startAsynchronousCrawl(){
         synchronized(lock) {
-            if (started) {
+            if (started || doneCrawling) {
                 return false;
             }
             started = true;
@@ -93,7 +97,9 @@ public class SearchEngine {
     public void terminate(){
         synchronized (lock) {
             if (started && crawlThread != null) {
-                crawlThread.interrupt();
+                LOGGER.info("terminating crawlThread");
+                crawler.stopCrawl();
+                pageRankerManager.terminate();
                 started = false;
             }
         }
@@ -105,12 +111,12 @@ public class SearchEngine {
         pageRankerManager.asyncPrepareNext();
     }
 
-    public void setPagesCrawled(Integer pagesCrawled){
-        this.pagesCrawled = pagesCrawled;
+    public Integer getPagesCrawled(){
+        return crawler.getPagesCrawled();
     }
 
-    public Integer getPagesCrawled(){
-        return pagesCrawled;
+    public Boolean isDoneCrawling(){
+        return crawler.isDoneCrawling();
     }
 
     public Boolean isStarted(){

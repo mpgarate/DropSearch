@@ -55,6 +55,18 @@ public class PageRankerManager {
         }
     }
 
+    public void terminate(){
+        synchronized (lock) {
+            synchronized (pendingPrepareNext) {
+                if (null != prepThread) {
+                    prepThread.interrupt();
+                }
+                pendingPrepareNext = false;
+                return;
+            }
+        }
+    }
+
     public void asyncPrepareNext(){
         synchronized (lock) {
             synchronized (pendingPrepareNext){

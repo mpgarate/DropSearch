@@ -2,6 +2,7 @@ package edu.nyu.mpgarate.dropsearch.crawl;
 
 import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.SearchEngine;
+import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
@@ -23,6 +24,9 @@ public class Crawler {
     private final List<CrawlerListener> listeners;
     private final Integer maxCrawlPages;
     private final SearchEngine searchEngine;
+    private Boolean doneCrawling;
+    private Integer pagesCrawled;
+    private Boolean stopCrawl;
 
 
     public Crawler(URI startUrl, SynchronizedKeywordIndex index, SearchEngine
@@ -32,6 +36,39 @@ public class Crawler {
         this.searchEngine = searchEngine;
         this.listeners = new LinkedList<CrawlerListener>();
         this.maxCrawlPages = Configuration.getInstance().getMaxCrawlPages();
+        this.doneCrawling = false;
+        this.pagesCrawled = 0;
+        this.stopCrawl = false;
+    }
+
+    public Integer getPagesCrawled(){
+        synchronized (pagesCrawled){
+            return pagesCrawled;
+        }
+    }
+
+    public void stopCrawl(){
+        synchronized (stopCrawl) {
+            this.stopCrawl = true;
+        }
+    }
+
+    private void setPagesCrawled(Integer pagesCrawled){
+        synchronized (pagesCrawled){
+            this.pagesCrawled = pagesCrawled;
+        }
+    }
+
+    private void setDoneCrawling(){
+        synchronized (doneCrawling) {
+            this.doneCrawling = true;
+        }
+    }
+
+    public Boolean isDoneCrawling(){
+        synchronized (doneCrawling){
+            return doneCrawling;
+        }
     }
 
     public void crawl() {
@@ -45,6 +82,12 @@ public class Crawler {
         seenUrls.add(startUrl);
 
         while (!urls.isEmpty() && pagesVisited < maxCrawlPages){
+            synchronized (stopCrawl) {
+                if (stopCrawl) {
+                    return;
+                }
+            }
+
             URI url = urls.remove();
 
             LOGGER.info("visiting url: " + url);
@@ -81,11 +124,13 @@ public class Crawler {
 
             urls.addAll(nextUrls);
 
-            searchEngine.setPagesCrawled(pagesVisited);
+            setPagesCrawled(pagesVisited);
             fireVisitedWebPageEvent(webPage);
         }
 
         searchEngine.updatePageRank();
+        LOGGER.info("done crawling.");
+        setDoneCrawling();
     }
 
     /**

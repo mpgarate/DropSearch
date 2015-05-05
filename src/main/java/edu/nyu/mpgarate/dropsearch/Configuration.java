@@ -59,4 +59,9 @@ public class Configuration {
     public Double getPageRankOffset(){
         return Double.parseDouble(properties.getProperty("pageRankOffset"));
     }
+
+    public Integer getMaxActiveSearchEngines(){
+        return Integer.parseInt(properties.getProperty
+                ("maxActiveSearchEngines"));
+    }
 }

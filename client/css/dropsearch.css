@@ -17,3 +17,7 @@ body {
 #startUrl {
   width: 600px;
 }
+
+.search-results {
+  margin-top: 24px;
+}

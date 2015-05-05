@@ -10,7 +10,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  * Created by mike on 4/20/15.
  */
 public class SearchEngineFactory {
-    private final static int MAX_ACTIVE_SEARCH_ENGINES = 3;
+    private final static int MAX_ACTIVE_SEARCH_ENGINES = Configuration
+            .getInstance().getMaxActiveSearchEngines();
 
     private final static Map<URI, SearchEngine> searchEngines =
             new ConcurrentHashMap<>();
@@ -28,13 +29,13 @@ public class SearchEngineFactory {
         SearchEngine searchEngine;
 
         synchronized (LOCK){
-            if (searchEngines.size() >= MAX_ACTIVE_SEARCH_ENGINES){
-                removeOldestSearchEngine();
-            }
-
             searchEngine = searchEngines.get(url);
 
             if (null == searchEngine){
+                if (searchEngines.size() > MAX_ACTIVE_SEARCH_ENGINES){
+                    removeOldestSearchEngine();
+                }
+
                 searchEngine = new SearchEngine(url);
             }
 

@@ -26,11 +26,6 @@
           </button>
           <a class="navbar-brand" href="#">DropSearch</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse pull-right">
-          <ul class="nav navbar-nav">
-            <li><a href="#about">About</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
       </div>
     </nav>
 
@@ -38,9 +33,8 @@
       <div class="col-sm-12">
         <form class="form-inline start-url-form">
           <div class="form-group">
-            <label for="startUrl">Start Url</label>
             <input id="startUrl" class="form-control" value="http://en.wikipedia.org/wiki/Albert_Gallatin">
-            <a href="#" class="btn btn-default">Start crawl</a>
+            <a href="#" id="startCrawl" class="btn btn-default">Start crawl</a>
           </div>
         </form>
         <form class="form-inline search-form">
@@ -50,6 +44,8 @@
           </div>
         </form>
       </div>
+
+      <hr>
        
       <div id="search-results" class="col-sm-12"></div>
      

@@ -5,12 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.nyu.mpgarate.dropsearch.SearchEngine;
 import edu.nyu.mpgarate.dropsearch.SearchEngineFactory;
+import edu.nyu.mpgarate.dropsearch.document.CrawlStatus;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.logging.Logger;
 
@@ -25,25 +27,35 @@ public class StartCrawlResource {
             .class.getName());
     @GET
     @Timed
-    public String startCrawl(@QueryParam("url")
+    public Response startCrawl(@QueryParam("url")
                                  URI url){
 
         ObjectMapper mapper = new ObjectMapper();
 
         SearchEngine searchEngine = SearchEngineFactory.getSearchEngine(url);
 
+        if (!searchEngine.isStarted() && !searchEngine.isDoneCrawling()) {
+            searchEngine.startAsynchronousCrawl();
+        }
+
+        Response resp;
+
         try {
-            if (searchEngine.isStarted()) {
-                return mapper.writeValueAsString(searchEngine.getPagesCrawled());
-            } else {
-                searchEngine.startAsynchronousCrawl();
-                return mapper.writeValueAsString(true);
-            }
+            CrawlStatus crawlStatus = new CrawlStatus(searchEngine
+                    .getPagesCrawled(), searchEngine.isDoneCrawling());
+            String respStr = mapper.writeValueAsString(crawlStatus);
+
+            resp = Response.ok()
+                    .entity(respStr)
+                    .header("Access-Control-Allow-Origin", "*")
+                    .build();
         } catch (JsonProcessingException e){
             LOGGER.warning("could not create json");
             e.printStackTrace();
+            resp = Response.serverError().build();
         }
 
-        return "internal error";
+
+        return resp;
     }
 }
