@@ -46,7 +46,7 @@ public class SearchResultRelevanceCalc {
 
         Double pageRankScore = pageRanker.getScore(searchResult.getUrl());
 
-        // since this pagrRanker may not be complete, we boost the scores so
+        // since this pageRanker may not be complete, we boost the scores so
         // that scores of 0 do not eliminate a page from consideration.
         relevanceScore *= (pageRankScore + conf.getPageRankOffset()) * conf
                 .getPageRankWeight();

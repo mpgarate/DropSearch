@@ -68,4 +68,8 @@ public class Configuration {
     public Long getCrawlPolitenessDelay(){
         return Long.parseLong(properties.getProperty("crawlPolitenessDelay"));
     }
+
+    public Integer getResultCount(){
+        return Integer.parseInt(properties.getProperty("resultCount"));
+    }
 }

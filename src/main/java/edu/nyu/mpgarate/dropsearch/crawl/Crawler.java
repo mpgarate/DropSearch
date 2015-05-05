@@ -108,8 +108,7 @@ public class Crawler {
             pagesVisited++;
 
             if (pagesVisited % Configuration.getInstance()
-                    .getPageRankRefreshRate() ==
-                    0){
+                    .getPageRankRefreshRate() == 0){
                 LOGGER.info("pagesVisited: " + pagesVisited);
                 searchEngine.updatePageRank();
             }
@@ -159,15 +158,10 @@ public class Crawler {
             // convert nanoseconds difference to milliseconds
             Long delta = (timeNow - lastRetrievalTime) / 1_000_000;
 
-            LOGGER.info("delta: " + delta);
-            LOGGER.info("timeNow: " + timeNow);
-            LOGGER.info("lastRetrievalTime: " + lastRetrievalTime);
-
             if (delta < crawlPolitenessDelay){
                 try {
-                    LOGGER.info("sleeping for: " + delta);
-                    Thread.sleep(delta);
-                    LOGGER.info("slept for: " + delta);
+                    Long sleepDuration = crawlPolitenessDelay - delta;
+                    Thread.sleep(sleepDuration);
                 } catch (InterruptedException ignoredException) {
                 }
             }

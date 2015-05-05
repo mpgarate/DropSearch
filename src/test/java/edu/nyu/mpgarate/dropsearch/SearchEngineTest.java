@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -29,8 +30,7 @@ public class SearchEngineTest {
 
         System.out.println(results);
 
-        assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
-                .equals(d7200Url)));
+        assertEquals(d7200Url, results.get(0).getUrl());
     }
 
 
@@ -43,11 +43,8 @@ public class SearchEngineTest {
 
         ds.startSynchronousCrawl();
 
-        System.out.println("done crawl");
-
         List<SearchResult> results = ds.search(SearchQuery.parse
-                ("university"));
-
+                ("france"));
 
         System.out.println(results);
 
@@ -57,31 +54,7 @@ public class SearchEngineTest {
         System.out.println(result);
         System.out.println(lastResult);
 
-        assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
-                .equals(albertGallatinURI)));
+        URI franceURI = new URI("http://en.wikipedia.org/wiki/France");
+        assertEquals(franceURI, results.get(0).getUrl());
     }
-
-//    @Test
-//    public void powerPirateTest() throws MalformedURIException {
-//        URI powerPirateUrl = new URI("http://powerpirate.com/");
-//
-//        SearchEngine ds = SearchEngineFactory.getSearchEngine
-//                (powerPirateUrl);
-//
-//        ds.startSynchronousCrawl();
-//
-//        List<SearchResult> results = ds.search(SearchQuery.parse
-//                ("pirate press ping pong"));
-//
-//        System.out.println(results);
-//
-//        SearchResult result = results.get(0);
-//        SearchResult lastResult = results.get(results.size() - 1);
-//
-//        System.out.println(result);
-//        System.out.println(lastResult);
-//
-//        assertTrue(results.stream().anyMatch(sr -> sr.getUrl()
-//                .equals(powerPirateUrl)));
-//    }
 }

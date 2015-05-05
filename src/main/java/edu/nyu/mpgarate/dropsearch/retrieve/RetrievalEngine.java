@@ -1,5 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.retrieve;
 
+import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.algorithm.SearchResultRelevanceCalc;
 import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
 import edu.nyu.mpgarate.dropsearch.crawl.Extractor;
@@ -25,6 +26,7 @@ public class RetrievalEngine {
     private final SynchronizedKeywordIndex index;
     private final SynchronizedUriMap uriMap;
     private final PageRankerManager pageRankerManager;
+    private final Integer resultCount;
 
     public RetrievalEngine(URI startUrl, SynchronizedKeywordIndex index,
                            PageRankerManager pageRankerManager,
@@ -33,6 +35,7 @@ public class RetrievalEngine {
         this.index = index;
         this.uriMap = uriMap;
         this.pageRankerManager = pageRankerManager;
+        this.resultCount = Configuration.getInstance().getResultCount();
     }
 
     private List<KeywordMatch> getMatchesAllTerms(SearchQuery searchQuery){
@@ -160,8 +163,8 @@ public class RetrievalEngine {
 
         LOGGER.info("done sorting retrieved results");
 
-        if (results.size() >= 25){
-            results = results.subList(0, 25);
+        if (results.size() >= resultCount){
+            results = results.subList(0, resultCount);
         }
 
         insertPageTitles(results);
