@@ -64,4 +64,8 @@ public class Configuration {
         return Integer.parseInt(properties.getProperty
                 ("maxActiveSearchEngines"));
     }
+
+    public Long getCrawlPolitenessDelay(){
+        return Long.parseLong(properties.getProperty("crawlPolitenessDelay"));
+    }
 }

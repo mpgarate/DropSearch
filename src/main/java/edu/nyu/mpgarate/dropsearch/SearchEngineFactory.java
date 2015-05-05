@@ -32,7 +32,7 @@ public class SearchEngineFactory {
             searchEngine = searchEngines.get(url);
 
             if (null == searchEngine){
-                if (searchEngines.size() > MAX_ACTIVE_SEARCH_ENGINES){
+                if (searchEngines.size() >= MAX_ACTIVE_SEARCH_ENGINES){
                     removeOldestSearchEngine();
                 }
 

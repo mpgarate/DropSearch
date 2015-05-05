@@ -2,6 +2,7 @@ package edu.nyu.mpgarate.dropsearch.crawl;
 
 import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.SearchEngine;
+import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRanker;
 import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
@@ -11,6 +12,7 @@ import edu.nyu.mpgarate.dropsearch.util.listener.CrawlerListener;
 
 import java.io.IOException;
 import java.net.URI;
+import java.sql.Time;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -27,6 +29,8 @@ public class Crawler {
     private Boolean doneCrawling;
     private Integer pagesCrawled;
     private Boolean stopCrawl;
+    private Long lastRetrievalTime;
+    private Long crawlPolitenessDelay;
 
 
     public Crawler(URI startUrl, SynchronizedKeywordIndex index, SearchEngine
@@ -39,6 +43,9 @@ public class Crawler {
         this.doneCrawling = false;
         this.pagesCrawled = 0;
         this.stopCrawl = false;
+        this.lastRetrievalTime = 0l;
+        this.crawlPolitenessDelay = Configuration.getInstance()
+                .getCrawlPolitenessDelay();
     }
 
     public Integer getPagesCrawled(){
@@ -147,8 +154,29 @@ public class Crawler {
         String body;
 
         if (null == webPage){
+            Long timeNow = System.nanoTime();
+
+            // convert nanoseconds difference to milliseconds
+            Long delta = (timeNow - lastRetrievalTime) / 1_000_000;
+
+            LOGGER.info("delta: " + delta);
+            LOGGER.info("timeNow: " + timeNow);
+            LOGGER.info("lastRetrievalTime: " + lastRetrievalTime);
+
+            if (delta < crawlPolitenessDelay){
+                try {
+                    LOGGER.info("sleeping for: " + delta);
+                    Thread.sleep(delta);
+                    LOGGER.info("slept for: " + delta);
+                } catch (InterruptedException ignoredException) {
+                }
+            }
+
             try {
                 body = IOUtil.getURLAsString(url.toURL());
+
+                lastRetrievalTime = System.nanoTime();
+
                 if (null == body){
                     LOGGER.info("---- got null body ----");
                     return null;
