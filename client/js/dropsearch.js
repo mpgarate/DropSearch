@@ -2,19 +2,8 @@ $(function() {
   var searchResultsTemplateSource = $("#search-results-template").html();
   var searchResultsTemplate = Handlebars.compile(searchResultsTemplateSource);
 
-  function log( message ) {
-
-    // for (var i = 0; i < message.length; i++){
-    //   $( "<div>" ).text( message[i].title).appendTo( "#log" );
-    //   $( "<div>" ).text( message[i].url ).appendTo( "#log" );
-    //   $( "<div>" ).text( message[i].relevanceScore ).appendTo( "#log" );
-    //   $( "#log" ).scrollTop( 0 );
-    // }
-  }
-   
-
-  var SEARCH_URL = encodeURI("http://localhost:8080/search");
-  var START_CRAWL_URL = encodeURI("http://localhost:8080/start_crawl");
+  var SEARCH_URL = encodeURI("http://dropsearch.mpgarate.com:8080/search");
+  var START_CRAWL_URL = encodeURI("http://dropsearch.mpgarate.com:8080/start_crawl");
 
   var currentRequestNumber = 0;
 
