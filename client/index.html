@@ -1,109 +1,16 @@
 <html>
   <head>
-    <script src="js/jquery-2.1.3.min.js"></script>
-    <script src="js/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
-    <script>
-    $(function() {
-      function log( message ) {
-        for (var i = 0; i < message.length; i++){
-          $( "<div>" ).text( message[i].title).appendTo( "#log" );
-          $( "<div>" ).text( message[i].url ).appendTo( "#log" );
-          $( "<div>" ).text( message[i].relevanceScore ).appendTo( "#log" );
-          $( "#log" ).scrollTop( 0 );
-        }
-      }
-   
-   /*
-      $( "#query" ).autocomplete({
-        source: function(request, response) {
-          $.ajax({
-            url: "http://localhost:8080/search",
-            dataType: "json",
-            data: {
-              url: "http://en.wikipedia.org/wiki/Albert_Gallatin",
-              q: request.term
-            },
-            success: function(data) {
-              console.log(data);
-              log(data);
-              response(data);
-            }
-          });
-        },
-        minLength: 3,
-        select: function( event, ui ) {
-          // console.log(event);
-          // log( ui.item ?
-          //   "Selected: " + ui.item.label :
-          //   "Nothing selected, input was " + this.value);
-        },
-        open: function() {
-          // $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-        },
-        close: function() {
-          // $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-        }
-      });
-    });
-*/
-
-    var URL = encodeURI("http://localhost:8080/search");
-    var currentRequestNumber = 0;
-
-    var timer;
-    var interval = 100;
-
-    function getSearchResults(queryVal, requestNumber){
-      $("#log").text("");
-      console.log("starting request...");
-      $.get(URL, {
-        url: $("#startUrl").val(), //"http://www.kenrockwell.com/tech/recommended-cameras.htm",
-        q: queryVal
-      }, function(data){
-        if (currentRequestNumber != requestNumber){
-          console.log("discarding old request");
-          return;
-        }
-
-        console.log("got");
-        console.log(data);
-        log(data);
-      });
-    }
-
-
-    $("#query").keyup(function(){
-
-      var queryVal = $("#query").val();
-
-      if (queryVal && queryVal.length > 2){
-        currentRequestNumber++;
-        var requestNumber = currentRequestNumber;
-        clearTimeout(timer);
-        timer = setTimeout(function(){
-          getSearchResults(queryVal, requestNumber);
-        }, interval);
-      }
-    });
-
-    $("#query").keydown(function(){
-      clearTimeout(timer);
-    });
-  });
-
-    </script>
-
-    <style>
-    #log {
-      z-index: 10;
-    }
-    </style>
+    <script src="js/lib/jquery-2.1.3.min.js"></script>
+    <script src="js/lib/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <script src="js/dropsearch.js"></script>
+    <link rel="stylesheet" type="text/css" href="mystyle.css">
   </head>
   <body>
    
   <div class="ui-widget">
     <label for="startUrl">Start Url:</label>
     <input id="startUrl">
+    <button>Start crawl</button>
     <br>
     <br>
     <label for="query">Search Query:</label>

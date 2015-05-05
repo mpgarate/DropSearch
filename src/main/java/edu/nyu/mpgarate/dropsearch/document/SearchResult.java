@@ -1,6 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.document;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -17,6 +17,7 @@ import java.util.Set;
 public class SearchResult implements Comparable<SearchResult> {
     private final SearchQuery searchQuery;
     private Double relevanceScore;
+    @JsonIgnore
     private final Set<Keyword> matchedKeywords;
     private final URI url;
     private String title;

@@ -34,12 +34,6 @@ public class SearchResource {
         List<SearchResult> results = searchEngine.search(SearchQuery.parse
                 (query));
 
-//        System.out.println(results);
-
-//        List resultUrls = results.stream().map(sr -> new Object[] {sr.getUrl
-//                (), sr.getRelevanceScore()}).collect
-//                (Collectors.toList());
-
         try {
             String resp = new ObjectMapper().writeValueAsString(results);
 
