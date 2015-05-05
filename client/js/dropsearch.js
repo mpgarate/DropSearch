@@ -1,11 +1,17 @@
 $(function() {
+  var searchResultsTemplateSource = $("#search-results-template").html();
+  var searchResultsTemplate = Handlebars.compile(searchResultsTemplateSource);
+
   function log( message ) {
-    for (var i = 0; i < message.length; i++){
-      $( "<div>" ).text( message[i].title).appendTo( "#log" );
-      $( "<div>" ).text( message[i].url ).appendTo( "#log" );
-      $( "<div>" ).text( message[i].relevanceScore ).appendTo( "#log" );
-      $( "#log" ).scrollTop( 0 );
-    }
+    var html = searchResultsTemplate( {searchResults: message} );
+    $("#search-results").html(html);
+
+    // for (var i = 0; i < message.length; i++){
+    //   $( "<div>" ).text( message[i].title).appendTo( "#log" );
+    //   $( "<div>" ).text( message[i].url ).appendTo( "#log" );
+    //   $( "<div>" ).text( message[i].relevanceScore ).appendTo( "#log" );
+    //   $( "#log" ).scrollTop( 0 );
+    // }
   }
    
   var URL = encodeURI("http://localhost:8080/search");

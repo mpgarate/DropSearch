@@ -1,0 +1,19 @@
+html {
+  overflow-y: scroll;
+}
+
+body {
+  padding-top: 50px;
+}
+
+.content {
+  margin-top: 50px;
+}
+
+.search-form {
+  margin-top: 25px;
+}
+
+#startUrl {
+  width: 600px;
+}
