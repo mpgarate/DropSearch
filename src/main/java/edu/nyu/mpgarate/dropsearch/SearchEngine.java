@@ -23,6 +23,7 @@ public class SearchEngine {
     private Thread crawlThread;
     private URI startUrl;
     private PageRankerManager pageRankerManager;
+    private Integer pagesCrawled;
 
     SearchEngine(URI startUrl){
         if (null == startUrl){
@@ -55,14 +56,17 @@ public class SearchEngine {
         }
 
         crawler.crawl();
-
-        started = false;
     }
 
-    public void startAsynchronousCrawl(){
+    /**
+     *
+     * @return true if started crawl, false if crawl ongoing or already
+     * complete.
+     */
+    public boolean startAsynchronousCrawl(){
         synchronized(lock) {
             if (started) {
-                return;
+                return false;
             }
             started = true;
         }
@@ -71,12 +75,13 @@ public class SearchEngine {
             @Override
             public void run() {
                 crawler.crawl();
-                started = false;
             }
         };
 
         crawlThread = new Thread(runnable);
         crawlThread.start();
+
+        return true;
     }
 
     public List<SearchResult> search(SearchQuery query){
@@ -98,6 +103,18 @@ public class SearchEngine {
 
     public void updatePageRank(){
         pageRankerManager.asyncPrepareNext();
+    }
+
+    public void setPagesCrawled(Integer pagesCrawled){
+        this.pagesCrawled = pagesCrawled;
+    }
+
+    public Integer getPagesCrawled(){
+        return pagesCrawled;
+    }
+
+    public Boolean isStarted(){
+        return started;
     }
 
     public void addListener(DropSearchListener listener) {

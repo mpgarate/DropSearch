@@ -45,7 +45,6 @@ public class Crawler {
         seenUrls.add(startUrl);
 
         while (!urls.isEmpty() && pagesVisited < maxCrawlPages){
-
             URI url = urls.remove();
 
             LOGGER.info("visiting url: " + url);
@@ -82,6 +81,7 @@ public class Crawler {
 
             urls.addAll(nextUrls);
 
+            searchEngine.setPagesCrawled(pagesVisited);
             fireVisitedWebPageEvent(webPage);
         }
 
