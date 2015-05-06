@@ -41,15 +41,14 @@ public class SearchResultRelevanceCalc {
 
         List<Keyword> keywords = searchResult.getMatchedKeywords();
 
-        relevanceScore *= getKeywordsScore(keywords) * conf
-                .getKeywordsWeight();
+        relevanceScore *= getKeywordsScore(keywords) + conf
+                .getKeywordsOffset();
 
         Double pageRankScore = pageRanker.getScore(searchResult.getUrl());
 
         // since this pageRanker may not be complete, we boost the scores so
         // that scores of 0 do not eliminate a page from consideration.
-        relevanceScore *= (pageRankScore + conf.getPageRankOffset()) * conf
-                .getPageRankWeight();
+        relevanceScore *= pageRankScore + conf.getPageRankOffset();
 
         LOGGER.info("pageRank: " + searchResult
                         .getUrl() + " : " + pageRankScore);

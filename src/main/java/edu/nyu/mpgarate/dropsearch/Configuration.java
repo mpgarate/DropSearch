@@ -48,12 +48,8 @@ public class Configuration {
         return Integer.parseInt(properties.getProperty("pageRankRefreshRate"));
     }
 
-    public Double getKeywordsWeight(){
+    public Double getKeywordsOffset(){
         return Double.parseDouble(properties.getProperty("keywordsRate"));
-    }
-
-    public Double getPageRankWeight(){
-        return Double.parseDouble(properties.getProperty("pageRankWeight"));
     }
 
     public Double getPageRankOffset(){
