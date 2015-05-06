@@ -49,7 +49,7 @@ public class Configuration {
     }
 
     public Double getKeywordsOffset(){
-        return Double.parseDouble(properties.getProperty("keywordsRate"));
+        return Double.parseDouble(properties.getProperty("keywordsOffset"));
     }
 
     public Double getPageRankOffset(){
