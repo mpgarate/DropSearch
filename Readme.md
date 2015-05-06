@@ -1,55 +1,37 @@
-## What is DropSearch?
+# DropSearch
 
 General purpose same-domain search engine. 
 
-Enter a url from which to crawl, and perform searches on the documents, even if the crawl is still ongoing. 
+Enter a url from which to crawl, and perform searches on the documents right away, even if the crawl is still ongoing. 
 
-Document relevance is determined by keyword frequency / document length, with an extra weight given to terms that appear in the title. 
+## Accessing the server and running the code
 
-First, an attempt is made to search for documents that contain all of the given terms. If this produces zero results, then a more lenient search will return documents that contain any of the keywords. 
-
-Finally, PageRank is used to bubble up relevant documents for a given query. The benefits of this are limited since the data set is generally too small and skewed by being single-domain (so will prefer meta-information pages that are linked to everywhere). 
-
-The PageRank graph is built and the algorithm re-run in a separate thread while the crawler is still active, allowing a well-rounded search before the crawl is complete. 
-
-### A few notes / caveats
-
-Since the goal is to search on data while it is still being crawled, there is no cache of search results. 
-
-
-
-## Using DropSearch
-
-### Noteworthy example queries
-
-Performed on:
-```
-crawled: 2000
-url: http://en.wikipedia.org/wiki/Albert_Gallatin
+```sh
+ssh mike@dropsearch.mpgarate.com
 ```
 
+enter password ```nyu_search_engines```
 
-```gallatin school``` will show the page for NYU Gallatin before "Albert Gallatin Area School District", even though the latter contains a much higher occ(school). 
+Resume my screen session:
+```sh
+screen -x
+```
 
-```new york``` returns the page for New York
+This will contain screens with a few active processes. Switch between them with 'ctrl + a' followed by 'NUMBER'
 
-```new york university``` returns the page for New York University, and it appears twice since there is no document deduplication used here. A crawled link to ```http://en.wikipedia.org/wiki/The_Plague_(magazine)``` redirects to the main NYU article, and the document is retrieved again. 
+- ```0``` : Java service
+- ```1``` : nodejs server for client-side files
+- ```2``` : bash
 
-```university``` returns many pages about New York University, but Harvard's pagerank still manages to push it above NYU. 
+You may want to play around with the values in ```src/main/resources/dropsearch.properties``` and see them in action. To do so:
 
-```nyu``` returns NYU Local, NYU Violets, etc rather than New York University
-searching ```nyu``` before many pages have been crawled (~300 or so) will return the New York University page, since the term does appear there. But later results have stronger scores with the exact term appearing in the title. 
+1. Edit and save dropsearch.properties
+2. Switch to screen 0 and ctrl+c to kill running java service
+3. Start it again with ```gradle run```
+4. Visit dropsearch.mpgarate.com
+5. Enter your test URL and query
 
-```france``` returns France
-```wikipedia``` returns Wikipedia:About and Wikipedia:Contact us
-```united states``` returns United States but ```America``` returns British America. 
-
-```park``` will return Washington Square Park (at crawl 1700 or so), since our mini-web's pagerank revolves around NYU (via Albert Gallatin)
-
-## Reading the Java code
-
-
-# Installation
+## Install on your own machine
 Install Java 8 JDK
 ```sh
 sudo add-apt-repository ppa:webupd8team/java

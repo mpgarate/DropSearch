@@ -25,21 +25,17 @@ public class SearchEngineFactoryTest {
 
         SearchEngine se1 = SearchEngineFactory.getSearchEngine(url1);
         se1.startSynchronousCrawl();
-
-        assertNotNull(webPageStore.get(url1, url1));
-
         SearchEngine se2 = SearchEngineFactory.getSearchEngine(url2);
         se2.startSynchronousCrawl();
 
-        assertNull(webPageStore.get(url1, url1));
+        assertNotNull(webPageStore.get(url1, url1));
         assertNotNull(webPageStore.get(url2, url2));
 
         SearchEngine se3 = SearchEngineFactory.getSearchEngine(url3);
         se3.startSynchronousCrawl();
 
-
         assertNull(webPageStore.get(url1, url1));
-        assertNull(webPageStore.get(url2, url2));
+        assertNotNull(webPageStore.get(url2, url2));
         assertNotNull(webPageStore.get(url3, url3));
 
         SearchEngine se4 = SearchEngineFactory.getSearchEngine(url4);
@@ -47,7 +43,7 @@ public class SearchEngineFactoryTest {
 
         assertNull(webPageStore.get(url1, url1));
         assertNull(webPageStore.get(url2, url2));
-        assertNull(webPageStore.get(url3, url3));
+        assertNotNull(webPageStore.get(url3, url3));
         assertNotNull(webPageStore.get(url4, url4));
     }
 }
