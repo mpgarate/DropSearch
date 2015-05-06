@@ -5,6 +5,8 @@ Project by Michael Garate
 
 General purpose same-domain search engine. 
 
+http://dropsearch.mpgarate.com/
+
 Enter a url from which to crawl, and perform searches on the documents right away, even if the crawl is still ongoing. 
 
 Document relevance is determined by keyword frequency / document length, with an extra weight given to terms that appear in the title. 
