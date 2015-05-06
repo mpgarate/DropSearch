@@ -21,14 +21,17 @@ First, I recommend you do some searches with the default url I provide to the Al
 
 After that, try a few other websites and queries. 
 I looked at:
+
 - Amazon products
 - Craigslist ads
 - The NYU Search Engines course site
 - kenrockwell.com
 
+Notice the quality of search results while the crawler is still active compared to after a crawl is complete. 
+
 ## How do I read the code?
 
-I would recommend first looking at src/main/resources/dropsearch.properties
+I would recommend first looking at ```src/main/resources/dropsearch.properties```
 
 This file contains config values and references to the pertinent classes. 
 
@@ -55,8 +58,11 @@ For a given SearchEngine, you will probably have 3 threads doing work at a given
 ## Referenced works
 
 http://infolab.stanford.edu/~backrub/google.html
+
 http://lucene.apache.org/core/3_0_3/api/core/org/apache/lucene/search/Similarity.html
+
 http://blog.algorithmia.com/post/116365814879/how-machines-see-the-web-exploring-the-web
+
 https://github.com/louridas/pagerank/blob/master/java/PageRankCalc.java
 
 ## Pertinent software used
@@ -65,13 +71,13 @@ WordNet, Jsoup, net.sf.jung (for graph and pagerank), https://rednoise.org/rita/
 
 ### A few notes / caveats
 
+PageRank helped improve the search results overall, but for many queries the quality reduced considerably. From the Albert Gallatin Wikipedia example, a search of "usa" or "america" without PageRank applied produced United States at the top. With PageRank, however, the "Wikipedia:General_disclaimer" and similar meta pages took over because it is linked to from everywhere and contains the term 'usa'. 
+
 Since the goal is to search on data while it is still being crawled, there is no cache of search results. 
 
 I originally intended to use keyword stems and synsets from wordnet, but I found these to be unreliable and had a negative impact on the quality of search results.
 
 The crawler does not obey robots.txt files. 
-
-
 
 ## Using DropSearch
 
@@ -94,9 +100,11 @@ url: http://en.wikipedia.org/wiki/Albert_Gallatin
 ```nyu``` returns NYU Local and NYU Violets, followed by New York University
 
 ```france``` returns France
+
 ```french``` returns France followed by French Revolution
 
 ```wikipedia``` returns Wikipedia:About and Wikipedia:Contact us
+
 ```united states``` returns United States but ```America``` returns British America. 
 
 ```park``` will return Washington Square Park since our mini-web's pagerank revolves around NYU (via Albert Gallatin)
