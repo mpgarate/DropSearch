@@ -1,9 +1,7 @@
 package edu.nyu.mpgarate.dropsearch.storage;
 
-import com.mongodb.MongoClient;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 import java.net.URI;
 import java.util.logging.Logger;

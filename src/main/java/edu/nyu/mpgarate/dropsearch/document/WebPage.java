@@ -89,7 +89,7 @@ public class WebPage {
         return sb
                 .append("WebPage { ")
                 .append("url: ")
-                .append(url.toString())
+                .append(url)
                 .append(", dateVisited: ")
                 .append(dateVisited.toString())
                 .append(" }")

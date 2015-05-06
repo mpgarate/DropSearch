@@ -28,8 +28,6 @@ public class WebPageStoreTest {
 
         WebPage webPage = new WebPage(url, body, new Date(), startUrl);
 
-        ObjectMapper mapper = new ObjectMapper();
-
         webPageStore.save(webPage);
 
         WebPage wp2 = webPageStore.get(webPage.getUrl(), startUrl);

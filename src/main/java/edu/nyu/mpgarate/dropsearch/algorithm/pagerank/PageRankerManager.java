@@ -12,13 +12,14 @@ public class PageRankerManager {
     private final static Logger LOGGER = Logger.getLogger(PageRankerManager
             .class.getName());
     private PageRanker externalRanker;
-    private Object lock = new Object();
+    private final Object lock = new Object();
 
     private SynchronizedKeywordIndex index;
     private URI startUrl;
     private Runnable rankerPrepRunnable;
     private Thread prepThread;
     private volatile Boolean pendingPrepareNext;
+    private final Object pendingPrepareNextLock = new Object();
 
     public PageRankerManager(SynchronizedKeywordIndex index, URI startUrl){
         this.pendingPrepareNext = false;
@@ -27,7 +28,7 @@ public class PageRankerManager {
             @Override
             public void run() {
                 while(pendingPrepareNext) {
-                    synchronized (pendingPrepareNext){
+                    synchronized (pendingPrepareNextLock){
                         pendingPrepareNext = false;
                     }
 
@@ -43,7 +44,7 @@ public class PageRankerManager {
 
                     LOGGER.info("leaving runnable");
 
-                    synchronized (pendingPrepareNext){};
+                    synchronized (pendingPrepareNextLock){}
                 }
             }
         };
@@ -57,19 +58,18 @@ public class PageRankerManager {
 
     public void terminate(){
         synchronized (lock) {
-            synchronized (pendingPrepareNext) {
+            synchronized (pendingPrepareNextLock) {
                 if (null != prepThread) {
                     prepThread.interrupt();
                 }
                 pendingPrepareNext = false;
-                return;
             }
         }
     }
 
     public void asyncPrepareNext(){
         synchronized (lock) {
-            synchronized (pendingPrepareNext){
+            synchronized (pendingPrepareNextLock){
                 pendingPrepareNext = true;
             }
 

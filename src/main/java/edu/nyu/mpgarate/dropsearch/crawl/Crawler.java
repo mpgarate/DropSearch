@@ -2,17 +2,13 @@ package edu.nyu.mpgarate.dropsearch.crawl;
 
 import edu.nyu.mpgarate.dropsearch.Configuration;
 import edu.nyu.mpgarate.dropsearch.SearchEngine;
-import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRanker;
-import edu.nyu.mpgarate.dropsearch.algorithm.pagerank.PageRankerManager;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
 import edu.nyu.mpgarate.dropsearch.util.IOUtil;
-import edu.nyu.mpgarate.dropsearch.util.listener.CrawlerListener;
 
 import java.io.IOException;
 import java.net.URI;
-import java.sql.Time;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -23,9 +19,9 @@ public class Crawler {
     private final Logger LOGGER = Logger.getLogger(Crawler.class.getName());
     private final URI startUrl;
     private final SynchronizedKeywordIndex index;
-    private final List<CrawlerListener> listeners;
     private final Integer maxCrawlPages;
     private final SearchEngine searchEngine;
+    private final Object lock;
     private Boolean doneCrawling;
     private Integer pagesCrawled;
     private Boolean stopCrawl;
@@ -38,7 +34,7 @@ public class Crawler {
         this.startUrl = startUrl;
         this.index = index;
         this.searchEngine = searchEngine;
-        this.listeners = new LinkedList<CrawlerListener>();
+        this.lock = new Object();
         this.maxCrawlPages = Configuration.getInstance().getMaxCrawlPages();
         this.doneCrawling = false;
         this.pagesCrawled = 0;
@@ -49,37 +45,37 @@ public class Crawler {
     }
 
     public Integer getPagesCrawled(){
-        synchronized (pagesCrawled){
+        synchronized (lock){
             return pagesCrawled;
         }
     }
 
     public void stopCrawl(){
-        synchronized (stopCrawl) {
+        synchronized (lock) {
             this.stopCrawl = true;
         }
     }
 
     private void setPagesCrawled(Integer pagesCrawled){
-        synchronized (pagesCrawled){
+        synchronized (lock){
             this.pagesCrawled = pagesCrawled;
         }
     }
 
     private void setDoneCrawling(){
-        synchronized (doneCrawling) {
+        synchronized (lock) {
             this.doneCrawling = true;
         }
     }
 
     public Boolean isDoneCrawling(){
-        synchronized (doneCrawling){
+        synchronized (lock){
             return doneCrawling;
         }
     }
 
     public void crawl() {
-        Set<URI> seenUrls = new HashSet<URI>();
+        Set<URI> seenUrls = new HashSet<>();
         Queue<URI> urls = new LinkedList<>();
 
 
@@ -89,7 +85,7 @@ public class Crawler {
         seenUrls.add(startUrl);
 
         while (!urls.isEmpty() && pagesVisited < maxCrawlPages){
-            synchronized (stopCrawl) {
+            synchronized (lock) {
                 if (stopCrawl) {
                     return;
                 }
@@ -117,7 +113,7 @@ public class Crawler {
 
             index.addAll(extractor.keywords(), webPage);
 
-            List<URI> nextUrls = new ArrayList<URI>();
+            List<URI> nextUrls = new ArrayList<>();
 
             // TODO: don't add URIs to queue if there are greater than
             // maxCrawlPages - pagesVisited
@@ -131,7 +127,6 @@ public class Crawler {
             urls.addAll(nextUrls);
 
             setPagesCrawled(pagesVisited);
-            fireVisitedWebPageEvent(webPage);
         }
 
         searchEngine.updatePageRank();
@@ -187,20 +182,8 @@ public class Crawler {
             webPage = new WebPage(url, body, new Date(), startUrl);
 
             webPageStore.save(webPage);
-        } else {
-//            LOGGER.info("---- grabbed doc from database ----");
         }
 
         return webPage;
-    }
-
-    public void addListener(CrawlerListener listener){
-        listeners.add(listener);
-    }
-
-    private void fireVisitedWebPageEvent(WebPage webPage){
-        for(CrawlerListener listener : listeners){
-            listener.visitedWebPage(webPage);
-        }
     }
 }

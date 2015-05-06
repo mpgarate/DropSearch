@@ -10,16 +10,13 @@ import java.util.stream.Collectors;
  * Created by mike on 4/27/15.
  */
 public class SearchQuery {
-    private final String inputString;
     private final List<String> terms;
 
     private SearchQuery(String inputString){
-        this.inputString = inputString;
         this.terms = parseTerms(inputString);
     }
 
     public static SearchQuery parse(String inputString){
-        // do stuff
         return new SearchQuery(inputString);
     }
 
@@ -28,10 +25,10 @@ public class SearchQuery {
     }
 
     private List<String> parseTerms(String inputString){
-        List<String> keywords = new ArrayList<String>(Arrays.asList(inputString
+        List<String> keywords = new ArrayList<>(Arrays.asList(inputString
                 .split("\\s+")));
 
-        keywords = keywords.stream().map(kw -> kw.toLowerCase()).collect
+        keywords = keywords.stream().map(String::toLowerCase).collect
                 (Collectors.toList());
 
         return keywords;

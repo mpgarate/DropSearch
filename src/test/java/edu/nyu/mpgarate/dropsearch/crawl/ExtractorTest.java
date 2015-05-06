@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -83,12 +82,12 @@ public class ExtractorTest {
         String body = "lorem ipsum any bEcause been could be that so some " +
                 "banana";
 
-        List<String> ignoredWords = Arrays.asList(new String[]{"any",
+        List<String> ignoredWords = Arrays.asList("any",
                 "because",
                 "bEcause",
                 "been",
                 "could",
-                "be", "that", "so", "some"});
+                "be", "that", "so", "some");
 
 
         URI url = new URI("http://example.com");

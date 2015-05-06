@@ -9,7 +9,8 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -36,7 +37,7 @@ public class PageRanker {
         Integer currentEdge = 0;
 
         synchronized (lock) {
-            allUrls = new HashSet(index.getAllUrls());
+            allUrls = new HashSet<URI>(index.getAllUrls());
             graph = new DirectedSparseGraph<>();
 
             LOGGER.info("starting to add urls");
@@ -65,7 +66,7 @@ public class PageRanker {
         LOGGER.info("begin evaluate");
 
         synchronized (lock) {
-            pageRank = new PageRank<URI, Integer>(graph, 0.15);
+            pageRank = new PageRank<>(graph, 0.15);
 
             LOGGER.info("begin pageRank.evaluate()");
 

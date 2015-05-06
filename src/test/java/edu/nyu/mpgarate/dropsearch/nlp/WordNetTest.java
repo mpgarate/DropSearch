@@ -1,15 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.nlp;
 
-import edu.nyu.mpgarate.dropsearch.nlp.WordNet;
 import org.junit.Test;
-import rita.RiString;
-import rita.RiTa;
-import rita.RiWordNet;
-import rita.support.Stemmer;
-import rita.wordnet.jwnl.wndata.Word;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

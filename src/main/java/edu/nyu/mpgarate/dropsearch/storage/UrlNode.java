@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.bson.types.ObjectId;
 
-import java.net.URI;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by mike on 4/28/15.
@@ -63,7 +63,7 @@ public class UrlNode implements Comparable<UrlNode> {
     }
 
     @Override
-    public int compareTo(UrlNode otherUrlNode) {
+    public int compareTo(@NotNull UrlNode otherUrlNode) {
         return pageWeight.compareTo(otherUrlNode.getPageWeight());
     }
 }

@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.text.BreakIterator;
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Created by mike on 4/15/15.
@@ -47,7 +48,7 @@ public class Extractor {
 
         try {
             String line = reader.readLine();
-            return new HashSet<String>(Arrays.asList(line.split
+            return new HashSet<>(Arrays.asList(line.split
                     (",")));
         } catch (IOException e) {
             LOGGER.warning("Could not load stopwords.");
@@ -68,15 +69,13 @@ public class Extractor {
         List<String> titleTerms = new ArrayList<>();
         String title = jsoupDoc.title();
 
-        for (String s : extractTermsFrom(title)){
-            titleTerms.add(s);
-        }
+        titleTerms.addAll(extractTermsFrom(title).stream().collect(Collectors.toList()));
 
         return titleTerms;
     }
 
     private List<String> extractTermsFrom(String body){
-        List<String> termList = new ArrayList<String>();
+        List<String> termList = new ArrayList<>();
 
         BreakIterator boundary = BreakIterator.getWordInstance();
         boundary.setText(body);
@@ -99,7 +98,7 @@ public class Extractor {
     }
 
     private Map<String, Integer> countTerms(List<String> terms){
-        Map<String, Integer> keywordCount = new HashMap<String, Integer>();
+        Map<String, Integer> keywordCount = new HashMap<>();
 
         for (String term : terms){
             Integer prevCount = 0;
@@ -117,15 +116,18 @@ public class Extractor {
     private List<Keyword> compileKeywords(Map<String, Integer> termCounts,
                                           Integer totalTerms,
                                           List<String> titleTerms){
-        Map<String, Keyword> keywordMap = new HashMap<String, Keyword>();
+        Map<String, Keyword> keywordMap = new HashMap<>();
 
+        Integer termsSeen = 0;
         for(Map.Entry<String, Integer> entry : termCounts.entrySet()){
             Integer occCount = entry.getValue();
             String term = entry.getKey();
 
-            Double weight = VectorSpaceImportance.of(occCount, totalTerms);
+            Double weight = VectorSpaceImportance.of(occCount, totalTerms,
+                    termsSeen);
             Keyword keyword = new Keyword(term, weight);
             keywordMap.put(term, keyword);
+            termsSeen++;
         }
 
         Integer titleTermsCount = titleTerms.size();
@@ -145,7 +147,7 @@ public class Extractor {
             keywordMap.put(titleTerm, keyword);
         }
 
-        return new ArrayList<Keyword>(keywordMap.values());
+        return new ArrayList<>(keywordMap.values());
     }
     /**
      * Referenced for whitespace treatment:
@@ -165,7 +167,7 @@ public class Extractor {
     }
 
     public List<URI> nextUrls() {
-        List<URI> nextUrls = new LinkedList<URI>();
+        List<URI> nextUrls = new LinkedList<>();
         Elements links = jsoupDoc.select("a[href]");
 
         for (Element link : links) {
@@ -226,7 +228,7 @@ public class Extractor {
     }
 
     private boolean urlIsNotForbiddenType(URI url) {
-        Set<String> forbiddenTypes = new HashSet<String>();
+        Set<String> forbiddenTypes = new HashSet<>();
         forbiddenTypes.add("jpg");
         forbiddenTypes.add("png");
         forbiddenTypes.add("php");

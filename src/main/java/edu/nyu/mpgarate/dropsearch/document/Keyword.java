@@ -3,6 +3,8 @@ package edu.nyu.mpgarate.dropsearch.document;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by mike on 4/28/15.
  */
@@ -24,7 +26,7 @@ public class Keyword implements Comparable<Keyword> {
     }
 
     @Override
-    public int compareTo(Keyword otherKeyword){
+    public int compareTo(@NotNull Keyword otherKeyword){
         return getWeight()
                 .compareTo(otherKeyword.getWeight());
     }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ public class SearchResult implements Comparable<SearchResult> {
     public SearchResult(URI url, SearchQuery searchQuery){
         this.url = url;
         this.searchQuery = searchQuery;
-        this.matchedKeywords = new HashSet<Keyword>();
+        this.matchedKeywords = new HashSet<>();
         this.relevanceScore = -1.0;
     }
 
@@ -50,7 +51,7 @@ public class SearchResult implements Comparable<SearchResult> {
     }
 
     public List<Keyword> getMatchedKeywords(){
-        return new ArrayList(matchedKeywords);
+        return new ArrayList<Keyword>(matchedKeywords);
     }
 
     public void addKeyword(Keyword keyword) {
@@ -70,7 +71,7 @@ public class SearchResult implements Comparable<SearchResult> {
     }
 
     @Override
-    public int compareTo(SearchResult otherSearchResult) {
+    public int compareTo(@NotNull SearchResult otherSearchResult) {
         return getRelevanceScore()
                 .compareTo(otherSearchResult.getRelevanceScore());
     }

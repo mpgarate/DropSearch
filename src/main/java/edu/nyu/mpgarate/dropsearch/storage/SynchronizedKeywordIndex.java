@@ -1,7 +1,6 @@
 package edu.nyu.mpgarate.dropsearch.storage;
 
 import edu.nyu.mpgarate.dropsearch.document.Keyword;
-import edu.nyu.mpgarate.dropsearch.document.KeywordMatch;
 import edu.nyu.mpgarate.dropsearch.document.WebPage;
 import org.bson.types.ObjectId;
 
@@ -19,7 +18,7 @@ public class SynchronizedKeywordIndex {
     private final ConcurrentHashMap<String, Set<UrlNode>> map = new
             ConcurrentHashMap<>();
 
-    private final Set<URI> allUrls = new HashSet<URI>();
+    private final Set<URI> allUrls = new HashSet<>();
     private final SynchronizedUriMap uriMap;
 
     public SynchronizedKeywordIndex(SynchronizedUriMap uriMap){
@@ -43,7 +42,7 @@ public class SynchronizedKeywordIndex {
                 Set<UrlNode> urlNodes = map.get(term);
 
                 if (null == urlNodes) {
-                    urlNodes = new ConcurrentSkipListSet<UrlNode>();
+                    urlNodes = new ConcurrentSkipListSet<>();
                 }
 
                 if (!urlNodes.contains(urlNode)){
@@ -65,27 +64,12 @@ public class SynchronizedKeywordIndex {
             return Collections.emptyList();
         }
 
-        List<UrlNode> urlNodeList = Arrays.asList(urlNodes.toArray(new
-                UrlNode[urlNodes.size()]));
-
-
-        return urlNodeList;
-
-
-//        Set<KeywordMatch> matches = new HashSet<>();
-//
-//        for (UrlNode urlNode : urlNodes){
-//            KeywordMatch match = new KeywordMatch(term, urlNode.getPageWeight
-//                    (), urlNode.getUrlId());
-//            matches.add(match);
-//        }
-//
-//        return matches;
+        return new ArrayList<>(urlNodes);
     }
 
     public List<URI> getAllUrls(){
         synchronized (lock) {
-            return new ArrayList<URI>(allUrls);
+            return new ArrayList<>(allUrls);
         }
     }
 }

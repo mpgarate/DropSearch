@@ -17,7 +17,6 @@ public class SearchQueryTest {
         URI url = new URI("http://example.com");
         URI startUrl = new URI("http://example.com");
         String body = "lorem ipsum dolor sit amet";
-        WebPage webPage = new WebPage(url, body, new Date(), startUrl);
 
         SearchQuery query = SearchQuery.parse("ipsum dolor");
 

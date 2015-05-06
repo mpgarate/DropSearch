@@ -8,7 +8,6 @@ import edu.nyu.mpgarate.dropsearch.retrieve.RetrievalEngine;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedKeywordIndex;
 import edu.nyu.mpgarate.dropsearch.storage.SynchronizedUriMap;
 import edu.nyu.mpgarate.dropsearch.storage.WebPageStore;
-import edu.nyu.mpgarate.dropsearch.util.listener.DropSearchListener;
 
 import java.net.URI;
 import java.util.List;
@@ -28,8 +27,8 @@ public class SearchEngine {
     private PageRankerManager pageRankerManager;
     private Boolean doneCrawling;
 
-    SearchEngine(URI startUrl){
-        if (null == startUrl){
+    SearchEngine(URI startUrl) {
+        if (null == startUrl) {
             throw new NullPointerException();
         }
         this.uriMap = new SynchronizedUriMap();
@@ -43,16 +42,16 @@ public class SearchEngine {
         this.doneCrawling = false;
     }
 
-    public SynchronizedUriMap getUriMap(){
+    public SynchronizedUriMap getUriMap() {
         return uriMap;
     }
 
-    public SynchronizedKeywordIndex getIndex(){
+    public SynchronizedKeywordIndex getIndex() {
         return index;
     }
 
-    public void startSynchronousCrawl(){
-        synchronized(lock) {
+    public void startSynchronousCrawl() {
+        synchronized (lock) {
             if (started || doneCrawling) {
                 return;
             }
@@ -63,24 +62,18 @@ public class SearchEngine {
     }
 
     /**
-     *
      * @return true if started crawl, false if crawl ongoing or already
      * complete.
      */
-    public boolean startAsynchronousCrawl(){
-        synchronized(lock) {
+    public boolean startAsynchronousCrawl() {
+        synchronized (lock) {
             if (started || doneCrawling) {
                 return false;
             }
             started = true;
         }
 
-       Runnable runnable = new Runnable(){
-            @Override
-            public void run() {
-                crawler.crawl();
-            }
-        };
+        Runnable runnable = () -> crawler.crawl();
 
         crawlThread = new Thread(runnable);
         crawlThread.start();
@@ -88,13 +81,11 @@ public class SearchEngine {
         return true;
     }
 
-    public List<SearchResult> search(SearchQuery query){
-        List<SearchResult> searchResults = retrievalEngine.getWebPages(query);
-
-        return searchResults;
+    public List<SearchResult> search(SearchQuery query) {
+        return retrievalEngine.getWebPages(query);
     }
 
-    public void terminate(){
+    public void terminate() {
         synchronized (lock) {
             if (started && crawlThread != null) {
                 LOGGER.info("terminating crawlThread");
@@ -107,23 +98,19 @@ public class SearchEngine {
         new WebPageStore().deleteAllEngineUrls(startUrl);
     }
 
-    public void updatePageRank(){
+    public void updatePageRank() {
         pageRankerManager.asyncPrepareNext();
     }
 
-    public Integer getPagesCrawled(){
+    public Integer getPagesCrawled() {
         return crawler.getPagesCrawled();
     }
 
-    public Boolean isDoneCrawling(){
+    public Boolean isDoneCrawling() {
         return crawler.isDoneCrawling();
     }
 
-    public Boolean isStarted(){
+    public Boolean isStarted() {
         return started;
-    }
-
-    public void addListener(DropSearchListener listener) {
-        crawler.addListener(listener);
     }
 }

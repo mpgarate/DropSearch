@@ -12,7 +12,7 @@ public class Configuration {
     private static Configuration instance = null;
 
     private Configuration(){
-        InputStream inputStream = null;
+        InputStream inputStream;
 
         try {
             inputStream = Configuration.class.getClassLoader()

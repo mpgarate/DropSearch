@@ -73,7 +73,6 @@ public class RetrievalEngine {
         for (Map.Entry<ObjectId, List<KeywordMatch>> pair : objectIdListMap
                 .entrySet()){
             List<KeywordMatch> matches = pair.getValue();
-            ObjectId urlId = pair.getKey();
 
             if (matches.size() == searchQuery.getTerms().size()){
                 Double avgScore = 1.0;
@@ -119,7 +118,7 @@ public class RetrievalEngine {
             }
         }
 
-        return new ArrayList<KeywordMatch>(matchesAnyTerms.values());
+        return new ArrayList<>(matchesAnyTerms.values());
     }
 
     /**

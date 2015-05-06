@@ -1,7 +1,5 @@
 package edu.nyu.mpgarate.dropsearch.nlp;
 
-import rita.RiMarkov;
-import rita.RiString;
 import rita.RiTa;
 import rita.RiWordNet;
 
@@ -40,7 +38,7 @@ public class WordNet {
         stems.add(term);
 
         // first try using the PLING algorithm
-        stems.addAll(Arrays.asList(RiTa.stem(term, RiTa.PLING)));
+        stems.addAll(Collections.singletonList(RiTa.stem(term, RiTa.PLING)));
 
         // if none found, use WordNet
         if (1 == stems.size()){
@@ -51,7 +49,7 @@ public class WordNet {
 
         stems.remove(term);
 
-        return new ArrayList<String>(stems);
+        return new ArrayList<>(stems);
     }
 
     public static List<String> getRelatedWords(String term){
@@ -71,7 +69,7 @@ public class WordNet {
                 }
         }
 
-        List<String> relatedWordsList = new ArrayList<String>();
+        List<String> relatedWordsList = new ArrayList<>();
 
         for (String w : relatedWords){
             for (String pos : PARTS_OF_SPEECH) {

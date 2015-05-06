@@ -2,7 +2,6 @@ package edu.nyu.mpgarate.dropsearch.storage;
 
 import org.bson.types.ObjectId;
 
-import javax.validation.constraints.Null;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
 public class SynchronizedUriMap {
     private Map<ObjectId, URI> uriMap;
     private Map<URI, ObjectId> objectIdMap;
-    private Object lock;
+    private final Object lock;
 
     public SynchronizedUriMap(){
         this.uriMap = new HashMap<>();

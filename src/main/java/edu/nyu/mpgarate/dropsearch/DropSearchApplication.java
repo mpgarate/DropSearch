@@ -4,9 +4,6 @@ import edu.nyu.mpgarate.dropsearch.resources.SearchResource;
 import edu.nyu.mpgarate.dropsearch.resources.StartCrawlResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
-
-import javax.servlet.FilterRegistration;
 
 /**
  * Created by mike on 4/20/15.
