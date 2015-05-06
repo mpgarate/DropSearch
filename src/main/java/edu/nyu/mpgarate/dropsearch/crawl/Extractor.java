@@ -123,8 +123,7 @@ public class Extractor {
             Integer occCount = entry.getValue();
             String term = entry.getKey();
 
-            Double weight = VectorSpaceImportance.of(occCount, totalTerms,
-                    termsSeen);
+            Double weight = VectorSpaceImportance.of(occCount, totalTerms);
             Keyword keyword = new Keyword(term, weight);
             keywordMap.put(term, keyword);
             termsSeen++;
