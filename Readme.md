@@ -4,6 +4,8 @@ General purpose same-domain search engine.
 
 Enter a url from which to crawl, and perform searches on the documents right away, even if the crawl is still ongoing. 
 
+More details in [writeup.md](https://github.com/mpgarate/DropSearch/blob/master/Writeup.md)
+
 ## Accessing the server and running the code
 
 ```sh
