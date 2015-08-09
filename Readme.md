@@ -6,34 +6,7 @@ Enter a url from which to crawl, and perform searches on the documents right awa
 
 More details in [writeup.md](https://github.com/mpgarate/DropSearch/blob/master/Writeup.md)
 
-## Accessing the server and running the code
-
-```sh
-ssh mike@dropsearch.mpgarate.com
-```
-
-enter password ```nyu_search_engines```
-
-Resume my screen session:
-```sh
-screen -x
-```
-
-This will contain screens with a few active processes. Switch between them with 'ctrl + a' followed by 'NUMBER'
-
-- ```0``` : Java service
-- ```1``` : nodejs server for client-side files
-- ```2``` : bash
-
-You may want to play around with the values in ```src/main/resources/dropsearch.properties``` and see them in action. To do so:
-
-1. Edit and save dropsearch.properties
-2. Switch to screen 0 and ctrl+c to kill running java service
-3. Start it again with ```gradle run```
-4. Visit dropsearch.mpgarate.com
-5. Enter your test URL and query
-
-## Install on your own machine
+## Install on Ubuntu
 Install Java 8 JDK
 ```sh
 sudo add-apt-repository ppa:webupd8team/java
