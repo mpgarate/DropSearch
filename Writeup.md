@@ -1,5 +1,5 @@
 # DropSearch
-Project by Michael Garate
+Project by Michael Garate for Web Search Engines, Spring 2015
 
 ## What is DropSearch?
 
@@ -93,7 +93,7 @@ url: http://en.wikipedia.org/wiki/Albert_Gallatin
 
 ```gallatin school``` will show the page for NYU Gallatin before "Albert Gallatin Area School District", even though the latter contains a much higher occ(school). 
 
-```new york``` returns the page for New York City followed by New York
+```new york``` returns the page for New York followed by New York City
 
 ```new york university``` returns the page for New York University, and it appears twice since there is no document deduplication used here. A crawled link to ```http://en.wikipedia.org/wiki/The_Plague_(magazine)``` redirects to the main NYU article, and the document is retrieved again. 
 
